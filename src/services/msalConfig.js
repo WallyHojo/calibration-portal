@@ -1,44 +1,82 @@
 // ─── MSAL Configuration ───────────────────────────────────────────────────────
-// Microsoft Authentication Library config for connecting to
-// Microsoft 365 / SharePoint Online via Microsoft Graph API.
+// Microsoft Authentication Library config for Microsoft Entra ID.
+// Supports MFA enforcement via Conditional Access and role-based access
+// via Entra App Roles.
 //
-// SETUP REQUIRED:
-// 1. Register your app in Microsoft Entra admin center (entra.microsoft.com)
-//    → Applications → App registrations → New registration
-// 2. Set redirect URI to your Vercel URL (e.g. https://your-app.vercel.app)
-//    Platform: Single-page application (SPA)
-// 3. Under API Permissions add:
-//    Microsoft Graph → Delegated → Files.Read.All
-//    Microsoft Graph → Delegated → Sites.Read.All
-//    Microsoft Graph → Delegated → User.Read
-// 4. Copy the Application (client) ID and Directory (tenant) ID into .env
+// Security notes:
+//   - Uses Authorization Code flow with PKCE (automatic for SPAs in MSAL v3)
+//   - Tokens stored in sessionStorage only — cleared on tab close
+//   - MFA enforced server-side via Entra Conditional Access policy
+//   - Roles delivered in ID token via Entra App Roles
 //
-// See SHAREPOINT_SETUP.md for full step-by-step instructions.
+// See AUTH_SETUP.md for Entra configuration steps.
 
 export const msalConfig = {
   auth: {
     clientId:    import.meta.env.VITE_AZURE_CLIENT_ID,
     authority:   `https://login.microsoftonline.com/${import.meta.env.VITE_AZURE_TENANT_ID}`,
     redirectUri: import.meta.env.VITE_REDIRECT_URI ?? window.location.origin,
+    postLogoutRedirectUri: window.location.origin,
+    navigateToLoginRequestUrl: true,
   },
   cache: {
-    cacheLocation:       "sessionStorage", // sessionStorage = cleared on tab close
+    cacheLocation:          "sessionStorage", // never localStorage — XSS risk
     storeAuthStateInCookie: false,
+  },
+  system: {
+    loggerOptions: {
+      loggerCallback: (level, message, containsPii) => {
+        if (containsPii || import.meta.env.PROD) return;
+        const levels = ["Error", "Warning", "Info", "Verbose"];
+        console[level === 0 ? "error" : level === 1 ? "warn" : "log"](
+          `[MSAL][${levels[level]}] ${message}`
+        );
+      },
+      logLevel: import.meta.env.PROD ? 0 : 2, // Error only in prod, Info in dev
+    },
   },
 };
 
-// ─── Permission scopes ────────────────────────────────────────────────────────
-// Requested when the user logs in. Covers reading files from SharePoint.
-export const loginScopes = {
+// ─── Login scopes ─────────────────────────────────────────────────────────────
+// Requested at login. Includes claims request for MFA verification (amr)
+// and role claims. Entra Conditional Access enforces actual MFA requirement.
+export const loginRequest = {
   scopes: [
+    "openid",
+    "profile",
     "User.Read",
     "Files.Read.All",
     "Sites.Read.All",
   ],
+  // Request the amr claim to verify MFA was completed
+  claims: JSON.stringify({
+    id_token: {
+      amr: { essential: true },
+    },
+  }),
 };
 
-// ─── Silent token scopes ──────────────────────────────────────────────────────
-// Used for silent token refresh — no login popup shown to user.
-export const silentScopes = {
+// ─── Silent token refresh scopes ──────────────────────────────────────────────
+export const silentRequest = {
   scopes: ["Files.Read.All", "Sites.Read.All"],
 };
+
+// ─── App roles ────────────────────────────────────────────────────────────────
+// Must match the role values defined in your Entra App Registration.
+// See AUTH_SETUP.md → Step 4 for how to create these roles.
+export const APP_ROLES = {
+  ADMIN:    "Calibright.Admin",
+  CUSTOMER: "Calibright.Customer",
+};
+
+// ─── MFA verification ─────────────────────────────────────────────────────────
+// Checks the amr claim in the ID token to confirm MFA was satisfied.
+// amr = Authentication Methods References (RFC 8176)
+// "mfa" indicates multi-factor auth was used.
+export function isMfaVerified(account) {
+  const claims = account?.idTokenClaims ?? {};
+  const amr    = claims.amr ?? [];
+  return Array.isArray(amr)
+    ? amr.includes("mfa")
+    : amr === "mfa";
+}

@@ -58,7 +58,7 @@ export default function MobileSidebar({ open, onClose }) {
             </div>
             <div>
               <p className="text-white font-semibold text-sm tracking-wide">
-                CalibrationOS
+                Calibright
               </p>
               <p className="text-slate-500 text-xs tracking-widest uppercase">
                 Portal

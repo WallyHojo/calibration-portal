@@ -1,13 +1,8 @@
-// ─── Microsoft Graph API Client ───────────────────────────────────────────────
-// Thin wrapper around fetch that attaches a Bearer token from MSAL.
-// All SharePoint and file operations go through this client.
-
 import { PublicClientApplication } from "@azure/msal-browser";
-import { msalConfig, silentScopes } from "./msalConfig";
+import { msalConfig, silentRequest } from "./msalConfig";
 
 const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
 
-// Singleton MSAL instance — shared across the app
 let _msalInstance = null;
 
 export function getMsalInstance() {
@@ -17,8 +12,6 @@ export function getMsalInstance() {
   return _msalInstance;
 }
 
-// ─── Token acquisition ─────────────────────────────────────────────────────────
-// Tries silent refresh first. Falls back to redirect if token has expired.
 async function getAccessToken() {
   const msal    = getMsalInstance();
   const account = msal.getAllAccounts()[0];
@@ -28,20 +21,14 @@ async function getAccessToken() {
   }
 
   try {
-    const result = await msal.acquireTokenSilent({
-      ...silentScopes,
-      account,
-    });
+    const result = await msal.acquireTokenSilent({ ...silentRequest, account });
     return result.accessToken;
   } catch {
-    // Token expired or consent required — trigger interactive login
-    await msal.acquireTokenRedirect(silentScopes);
-    return null; // page will redirect, this line won't execute
+    await msal.acquireTokenRedirect(silentRequest);
+    return null;
   }
 }
 
-// ─── Core fetch wrapper ────────────────────────────────────────────────────────
-// All Graph API calls go through here. Throws on non-2xx responses.
 export async function graphFetch(path, options = {}) {
   const token = await getAccessToken();
 
@@ -61,7 +48,6 @@ export async function graphFetch(path, options = {}) {
     );
   }
 
-  // Return raw response for blob downloads; parse JSON otherwise
   if (options.responseType === "blob") return response.blob();
   return response.json();
 }
