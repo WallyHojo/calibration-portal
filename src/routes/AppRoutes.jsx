@@ -12,6 +12,7 @@ import Documents      from "../pages/Documents";
 import DocumentDetail from "../pages/DocumentDetail";
 import Reports        from "../pages/Reports";
 import Uploads        from "../pages/Uploads";
+import Customers      from "../pages/Customers";
 import PlaceholderPage from "../pages/PlaceholderPage";
 
 export default function AppRoutes() {
@@ -30,7 +31,7 @@ export default function AppRoutes() {
           <Route path="/documents"     element={<Documents />} />
           <Route path="/documents/:id" element={<DocumentDetail />} />
           <Route path="/vehicles"      element={<PlaceholderPage title="Vehicles"  />} />
-          <Route path="/customers"     element={<PlaceholderPage title="Customers" />} />
+          <Route path="/customers"     element={<Customers />} />
           <Route path="/settings"      element={<PlaceholderPage title="Settings"  />} />
 
           {/* Admin-only */}
