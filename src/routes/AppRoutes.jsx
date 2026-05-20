@@ -13,6 +13,8 @@ import DocumentDetail from "../pages/DocumentDetail";
 import Reports        from "../pages/Reports";
 import Uploads        from "../pages/Uploads";
 import Customers      from "../pages/Customers";
+import Vehicles       from "../pages/Vehicles";
+import VehicleDetail  from "../pages/VehicleDetail";
 import PlaceholderPage from "../pages/PlaceholderPage";
 
 export default function AppRoutes() {
@@ -30,7 +32,8 @@ export default function AppRoutes() {
           <Route index                 element={<Dashboard />} />
           <Route path="/documents"     element={<Documents />} />
           <Route path="/documents/:id" element={<DocumentDetail />} />
-          <Route path="/vehicles"      element={<PlaceholderPage title="Vehicles"  />} />
+          <Route path="/vehicles"      element={<Vehicles />} />
+          <Route path="/vehicles/:vin" element={<VehicleDetail />} />
           <Route path="/customers"     element={<Customers />} />
           <Route path="/settings"      element={<PlaceholderPage title="Settings"  />} />
 
