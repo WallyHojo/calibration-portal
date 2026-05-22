@@ -75,9 +75,9 @@ function VehicleDirectory({ sourceVehicles, showCustomerFilter = true }) {
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-16 text-center">
-          <p className="text-slate-500 text-sm font-medium">No vehicles match your search.</p>
-          <p className="text-slate-400 text-xs mt-1">Try adjusting your filters.</p>
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-6 py-16 text-center">
+          <p className="text-slate-500 dark:text-slate-500 text-sm font-medium">No vehicles match your search.</p>
+          <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Try adjusting your filters.</p>
         </div>
       )}
     </div>
@@ -99,16 +99,16 @@ export default function Vehicles() {
       {/* Page header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-slate-800 text-lg font-semibold">Vehicles</h2>
-          <p className="text-slate-500 text-sm mt-0.5">
+          <h2 className="text-slate-800 dark:text-slate-100 text-lg font-semibold">Vehicles</h2>
+          <p className="text-slate-500 dark:text-slate-500 text-sm mt-0.5">
             {isAdmin
               ? "All vehicles serviced across every customer."
               : "Vehicles associated with your account."}
           </p>
         </div>
-        <div className="shrink-0 flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">
-          <Car className="w-4 h-4 text-slate-500" />
-          <span className="text-slate-600 text-sm font-medium">
+        <div className="shrink-0 flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg">
+          <Car className="w-4 h-4 text-slate-500 dark:text-slate-500" />
+          <span className="text-slate-600 dark:text-slate-500 text-sm font-medium">
             {scopedVehicles.length} vehicle{scopedVehicles.length !== 1 ? "s" : ""}
           </span>
         </div>

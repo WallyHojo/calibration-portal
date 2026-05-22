@@ -15,6 +15,7 @@ import Uploads        from "../pages/Uploads";
 import Customers      from "../pages/Customers";
 import Vehicles       from "../pages/Vehicles";
 import VehicleDetail  from "../pages/VehicleDetail";
+import Settings       from "../pages/Settings";
 import PlaceholderPage from "../pages/PlaceholderPage";
 
 export default function AppRoutes() {
@@ -35,7 +36,8 @@ export default function AppRoutes() {
           <Route path="/vehicles"      element={<Vehicles />} />
           <Route path="/vehicles/:vin" element={<VehicleDetail />} />
           <Route path="/customers"     element={<Customers />} />
-          <Route path="/settings"      element={<PlaceholderPage title="Settings"  />} />
+          <Route path="/settings"      element={<Settings />} />
+          <Route path="/placeholder"      element={<PlaceholderPage />} />
 
           {/* Admin-only */}
           <Route element={<RequireRole role={APP_ROLES.ADMIN} />}>

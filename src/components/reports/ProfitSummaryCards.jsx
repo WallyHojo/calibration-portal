@@ -43,22 +43,22 @@ const cards = [
 const colorConfig = {
   emerald: {
     icon:  "bg-emerald-100 text-emerald-600",
-    value: "text-emerald-700",
+    value: "text-emerald-700 dark:text-emerald-300",
     sub:   "text-emerald-500",
   },
   blue: {
     icon:  "bg-blue-100 text-blue-600",
-    value: "text-blue-700",
+    value: "text-blue-700 dark:text-blue-300",
     sub:   "text-blue-400",
   },
   slate: {
-    icon:  "bg-slate-100 text-slate-600",
-    value: "text-slate-700",
-    sub:   "text-slate-400",
+    icon:  "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-500",
+    value: "text-slate-700 dark:text-slate-200",
+    sub:   "text-slate-400 dark:text-slate-500",
   },
   violet: {
     icon:  "bg-violet-100 text-violet-600",
-    value: "text-violet-700",
+    value: "text-violet-700 dark:text-violet-300",
     sub:   "text-violet-400",
   },
 };
@@ -81,10 +81,10 @@ export default function ProfitSummaryCards({ stats }) {
         return (
           <div
             key={card.key}
-            className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex flex-col gap-4"
+            className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-5 flex flex-col gap-4"
           >
             <div className="flex items-start justify-between">
-              <p className="text-slate-500 text-sm font-medium">{card.label}</p>
+              <p className="text-slate-500 dark:text-slate-500 text-sm font-medium">{card.label}</p>
               <div className={`p-2 rounded-lg ${cfg.icon}`}>
                 <Icon className="w-4 h-4" />
               </div>

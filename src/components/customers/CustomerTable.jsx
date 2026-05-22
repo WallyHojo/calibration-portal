@@ -2,13 +2,13 @@ import { useState } from "react";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 
 const typeConfig = {
-  collision:  { label: "Collision Shop", className: "bg-blue-50 text-blue-700 border-blue-200"      },
-  dealership: { label: "Dealership",     className: "bg-violet-50 text-violet-700 border-violet-200" },
+  collision:  { label: "Collision Shop", className: "bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800"      },
+  dealership: { label: "Dealership",     className: "bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800" },
 };
 
 const statusConfig = {
-  active:   { label: "Active",   className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  inactive: { label: "Inactive", className: "bg-slate-100  text-slate-500  border-slate-200"    },
+  active:   { label: "Active",   className: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800" },
+  inactive: { label: "Inactive", className: "bg-slate-100 dark:bg-slate-800  text-slate-500 dark:text-slate-500  border-slate-200 dark:border-slate-700"    },
 };
 
 function TypeBadge({ type }) {
@@ -48,7 +48,7 @@ const COLUMNS = [
 
 function SortIcon({ column, sort }) {
   if (sort.key !== column)
-    return <ChevronsUpDown className="w-3.5 h-3.5 text-slate-300" />;
+    return <ChevronsUpDown className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />;
   return sort.dir === "asc"
     ? <ChevronUp   className="w-3.5 h-3.5 text-blue-500" />
     : <ChevronDown className="w-3.5 h-3.5 text-blue-500" />;
@@ -79,25 +79,25 @@ export default function CustomerTable({ customers }) {
 
   if (!sorted.length) {
     return (
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-16 text-center">
-        <p className="text-slate-500 text-sm font-medium">No customers match your search.</p>
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-6 py-16 text-center">
+        <p className="text-slate-500 dark:text-slate-500 text-sm font-medium">No customers match your search.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50">
+            <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
               {COLUMNS.map((col) => (
                 <th
                   key={col.key}
                   onClick={() => col.sortable && handleSort(col.key)}
                   className={[
-                    "text-left text-xs font-semibold text-slate-500 uppercase tracking-wide px-5 py-3 whitespace-nowrap",
-                    col.sortable ? "cursor-pointer select-none hover:text-slate-700" : "",
+                    "text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3 whitespace-nowrap",
+                    col.sortable ? "cursor-pointer select-none hover:text-slate-700 dark:text-slate-200" : "",
                   ].join(" ")}
                 >
                   <div className="flex items-center gap-1.5">
@@ -108,32 +108,32 @@ export default function CustomerTable({ customers }) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {sorted.map((c) => (
-              <tr key={c.id} className="hover:bg-slate-50 transition-colors">
+              <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-slate-800/50 transition-colors">
                 <td className="px-5 py-3.5">
-                  <p className="text-slate-700 font-semibold text-sm">{c.name}</p>
+                  <p className="text-slate-700 dark:text-slate-200 font-semibold text-sm">{c.name}</p>
                   {c.franchiseBrand && (
-                    <p className="text-slate-400 text-xs mt-0.5">{c.franchiseBrand} Franchise</p>
+                    <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{c.franchiseBrand} Franchise</p>
                   )}
                 </td>
                 <td className="px-5 py-3.5 whitespace-nowrap">
                   <TypeBadge type={c.type} />
                 </td>
-                <td className="px-5 py-3.5 text-slate-600 whitespace-nowrap text-xs">
+                <td className="px-5 py-3.5 text-slate-600 dark:text-slate-500 whitespace-nowrap text-xs">
                   {c.address.city}, {c.address.state} {c.address.zip}
                 </td>
                 <td className="px-5 py-3.5 whitespace-nowrap">
-                  <p className="text-slate-700 text-xs font-medium">{c.contact.name}</p>
-                  <p className="text-slate-400 text-xs">{c.contact.title}</p>
+                  <p className="text-slate-700 dark:text-slate-200 text-xs font-medium">{c.contact.name}</p>
+                  <p className="text-slate-400 dark:text-slate-500 text-xs">{c.contact.title}</p>
                 </td>
-                <td className="px-5 py-3.5 font-mono text-sm font-semibold text-slate-700 whitespace-nowrap">
+                <td className="px-5 py-3.5 font-mono text-sm font-semibold text-slate-700 dark:text-slate-200 whitespace-nowrap">
                   {c.totalCalibrations}
                 </td>
-                <td className="px-5 py-3.5 font-mono text-sm text-slate-600 whitespace-nowrap">
+                <td className="px-5 py-3.5 font-mono text-sm text-slate-600 dark:text-slate-500 whitespace-nowrap">
                   {c.calibrationsThisMonth}
                 </td>
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 whitespace-nowrap">
+                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 dark:text-slate-500 whitespace-nowrap">
                   {formatDate(c.lastActivity)}
                 </td>
                 <td className="px-5 py-3.5 whitespace-nowrap">
@@ -146,8 +146,8 @@ export default function CustomerTable({ customers }) {
       </div>
 
       {/* Footer count */}
-      <div className="px-5 py-3 border-t border-slate-100 bg-slate-50">
-        <p className="text-xs text-slate-400">
+      <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+        <p className="text-xs text-slate-400 dark:text-slate-500">
           {sorted.length} customer{sorted.length !== 1 ? "s" : ""}
         </p>
       </div>

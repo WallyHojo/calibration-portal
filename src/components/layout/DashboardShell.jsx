@@ -8,7 +8,7 @@ export default function DashboardShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
       {/* Desktop sidebar */}
       <Sidebar />
 
@@ -22,14 +22,14 @@ export default function DashboardShell() {
       <div className="flex-1 flex flex-col min-w-0 lg:ml-64">
         <Header onMenuClick={() => setMobileOpen(true)} />
 
-        <main className="flex-1 p-4 sm:p-6">
+        <main className="flex-1 p-4 sm:p-6 bg-slate-50 dark:bg-slate-950">
           <Outlet />
         </main>
 
         {/* Footer */}
-        <footer className="px-6 py-4 border-t border-slate-200 bg-white">
-          <p className="text-xs text-slate-400">
-            CalibrationOS Portal &mdash; &copy; {new Date().getFullYear()} &mdash; v2.4.1
+        <footer className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+          <p className="text-xs text-slate-400 dark:text-slate-500">
+            Calibright Customer Portal &mdash; &copy; {new Date().getFullYear()} &mdash; v2.4.1
           </p>
         </footer>
       </div>

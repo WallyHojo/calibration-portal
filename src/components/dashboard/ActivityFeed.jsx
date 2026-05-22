@@ -5,7 +5,7 @@ const typeConfig = {
   upload:   { icon: Upload,        dotClass: "bg-blue-500",    iconClass: "text-blue-500"    },
   alert:    { icon: AlertTriangle, dotClass: "bg-amber-500",   iconClass: "text-amber-500"   },
   customer: { icon: UserPlus,      dotClass: "bg-emerald-500", iconClass: "text-emerald-500" },
-  vehicle:  { icon: Car,           dotClass: "bg-slate-500",   iconClass: "text-slate-500"   },
+  vehicle:  { icon: Car,           dotClass: "bg-slate-500",   iconClass: "text-slate-500 dark:text-slate-500"   },
 };
 
 function formatRelative(iso) {
@@ -23,10 +23,10 @@ function formatRelative(iso) {
 
 export default function ActivityFeed() {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-slate-100">
-        <h3 className="text-slate-800 font-semibold text-sm">Recent Activity</h3>
+      <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+        <h3 className="text-slate-800 dark:text-slate-100 font-semibold text-sm">Recent Activity</h3>
       </div>
 
       {/* Feed */}
@@ -46,25 +46,25 @@ export default function ActivityFeed() {
                   <Icon className="w-3 h-3 text-white" />
                 </div>
                 {!isLast && (
-                  <div className="w-px flex-1 bg-slate-100 my-1" />
+                  <div className="w-px flex-1 bg-slate-100 dark:bg-slate-800 my-1" />
                 )}
               </div>
 
               {/* Content */}
               <div className={`pb-4 flex-1 min-w-0 ${isLast ? "pb-0" : ""}`}>
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-slate-700 text-sm font-medium leading-snug">
+                  <p className="text-slate-700 dark:text-slate-200 text-sm font-medium leading-snug">
                     {item.message}
                   </p>
-                  <span className="text-slate-400 text-xs whitespace-nowrap shrink-0 font-mono">
+                  <span className="text-slate-400 dark:text-slate-500 text-xs whitespace-nowrap shrink-0 font-mono">
                     {formatRelative(item.timestamp)}
                   </span>
                 </div>
-                <p className="text-slate-400 text-xs mt-0.5 truncate">
+                <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5 truncate">
                   {item.detail}
                 </p>
-                <p className="text-slate-400 text-xs mt-0.5">
-                  <span className="font-medium text-slate-500">{item.user}</span>
+                <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
+                  <span className="font-medium text-slate-500 dark:text-slate-500">{item.user}</span>
                 </p>
               </div>
             </li>

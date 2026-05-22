@@ -22,13 +22,13 @@ function MarginBar({ margin }) {
                    "bg-amber-400";
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+      <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full ${color}`}
           style={{ width: `${Math.min(margin, 100)}%` }}
         />
       </div>
-      <span className="font-mono text-xs text-slate-500 w-10 text-right">
+      <span className="font-mono text-xs text-slate-500 dark:text-slate-500 w-10 text-right">
         {margin}%
       </span>
     </div>
@@ -49,7 +49,7 @@ const COLUMNS = [
 
 function SortIcon({ column, sort }) {
   if (sort.key !== column)
-    return <ChevronsUpDown className="w-3.5 h-3.5 text-slate-300" />;
+    return <ChevronsUpDown className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />;
   return sort.dir === "asc"
     ? <ChevronUp   className="w-3.5 h-3.5 text-blue-500" />
     : <ChevronDown className="w-3.5 h-3.5 text-blue-500" />;
@@ -92,10 +92,10 @@ export default function ProfitTable({ records }) {
     : 0;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-      <div className="px-5 py-4 border-b border-slate-100">
-        <h3 className="text-slate-800 font-semibold text-sm">Profit Per Job</h3>
-        <p className="text-slate-400 text-xs mt-0.5">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+        <h3 className="text-slate-800 dark:text-slate-100 font-semibold text-sm">Profit Per Job</h3>
+        <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
           Click any column header to sort. Profit = List Price − Cost.
         </p>
       </div>
@@ -103,14 +103,14 @@ export default function ProfitTable({ records }) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50">
+            <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
               {COLUMNS.map((col) => (
                 <th
                   key={col.key}
                   onClick={() => col.sortable && handleSort(col.key)}
                   className={[
-                    "text-left text-xs font-semibold text-slate-500 uppercase tracking-wide px-5 py-3 whitespace-nowrap",
-                    col.sortable ? "cursor-pointer select-none hover:text-slate-700" : "",
+                    "text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3 whitespace-nowrap",
+                    col.sortable ? "cursor-pointer select-none hover:text-slate-700 dark:text-slate-200" : "",
                   ].join(" ")}
                 >
                   <div className="flex items-center gap-1.5">
@@ -122,34 +122,34 @@ export default function ProfitTable({ records }) {
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {sorted.map((r) => (
-              <tr key={r.id} className="hover:bg-slate-50 transition-colors">
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 whitespace-nowrap">
+              <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-slate-800/50 transition-colors">
+                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 dark:text-slate-500 whitespace-nowrap">
                   {r.id}
                 </td>
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 whitespace-nowrap">
+                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 dark:text-slate-500 whitespace-nowrap">
                   {formatDate(r.date)}
                 </td>
                 <td className="px-5 py-3.5 whitespace-nowrap">
-                  <p className="text-slate-700 font-medium">{r.vehicle}</p>
+                  <p className="text-slate-700 dark:text-slate-200 font-medium">{r.vehicle}</p>
                 </td>
-                <td className="px-5 py-3.5 text-slate-600 whitespace-nowrap">
+                <td className="px-5 py-3.5 text-slate-600 dark:text-slate-500 whitespace-nowrap">
                   {r.adasSystem}
                 </td>
-                <td className="px-5 py-3.5 text-slate-600 whitespace-nowrap">
+                <td className="px-5 py-3.5 text-slate-600 dark:text-slate-500 whitespace-nowrap">
                   {r.customer}
                 </td>
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-600 whitespace-nowrap">
+                <td className="px-5 py-3.5 font-mono text-xs text-slate-600 dark:text-slate-500 whitespace-nowrap">
                   {formatCurrency(r.listPrice)}
                 </td>
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-600 whitespace-nowrap">
+                <td className="px-5 py-3.5 font-mono text-xs text-slate-600 dark:text-slate-500 whitespace-nowrap">
                   {formatCurrency(r.costPrice)}
                 </td>
-                <td className="px-5 py-3.5 font-mono text-xs font-semibold text-emerald-700 whitespace-nowrap">
+                <td className="px-5 py-3.5 font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-300 whitespace-nowrap">
                   {formatCurrency(r.profit)}
                 </td>
-                <td className="px-5 py-3.5 whitespace-nowrap min-w-[120px]">
+                <td className="px-5 py-3.5 whitespace-nowrap min-w-30">
                   <MarginBar margin={r.margin} />
                 </td>
               </tr>
@@ -158,17 +158,17 @@ export default function ProfitTable({ records }) {
 
           {/* Totals row */}
           <tfoot>
-            <tr className="border-t-2 border-slate-200 bg-slate-50">
-              <td colSpan={5} className="px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">
+            <tr className="border-t-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+              <td colSpan={5} className="px-5 py-3 text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide">
                 Totals — {records.length} jobs
               </td>
-              <td className="px-5 py-3 font-mono text-xs font-semibold text-slate-700">
+              <td className="px-5 py-3 font-mono text-xs font-semibold text-slate-700 dark:text-slate-200">
                 {formatCurrency(totals.listPrice)}
               </td>
-              <td className="px-5 py-3 font-mono text-xs font-semibold text-slate-700">
+              <td className="px-5 py-3 font-mono text-xs font-semibold text-slate-700 dark:text-slate-200">
                 {formatCurrency(totals.costPrice)}
               </td>
-              <td className="px-5 py-3 font-mono text-xs font-bold text-emerald-700">
+              <td className="px-5 py-3 font-mono text-xs font-bold text-emerald-700 dark:text-emerald-300">
                 {formatCurrency(totals.profit)}
               </td>
               <td className="px-5 py-3">

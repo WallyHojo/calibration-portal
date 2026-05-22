@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { Upload, FileText, AlertCircle, X } from "lucide-react";
 
 const MAX_FILES     = 10;
@@ -60,11 +60,11 @@ export default function DropZone({ onFilesAccepted }) {
     }
   }
 
-  const handleDrop = useCallback((e) => {
+  const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
     processFiles(e.dataTransfer.files);
-  }, [queued]);
+  };
 
   const handleDragOver  = (e) => { e.preventDefault(); setDragging(true);  };
   const handleDragLeave = (e) => { e.preventDefault(); setDragging(false); };
@@ -97,8 +97,8 @@ export default function DropZone({ onFilesAccepted }) {
         className={[
           "relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 py-14 cursor-pointer transition-all",
           dragging
-            ? "border-blue-400 bg-blue-50"
-            : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:bg-blue-50/50",
+            ? "border-blue-400 bg-blue-50 dark:bg-blue-950/30"
+            : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 hover:border-blue-300 hover:bg-blue-50 dark:bg-blue-950/30/50",
         ].join(" ")}
       >
         <input
@@ -111,18 +111,18 @@ export default function DropZone({ onFilesAccepted }) {
         />
         <div className={[
           "w-14 h-14 rounded-2xl flex items-center justify-center transition-colors",
-          dragging ? "bg-blue-100" : "bg-white border border-slate-200",
+          dragging ? "bg-blue-100" : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700",
         ].join(" ")}>
           <Upload className={[
             "w-6 h-6 transition-colors",
-            dragging ? "text-blue-600" : "text-slate-400",
+            dragging ? "text-blue-600" : "text-slate-400 dark:text-slate-500",
           ].join(" ")} />
         </div>
         <div className="text-center">
-          <p className="text-slate-700 font-semibold text-sm">
+          <p className="text-slate-700 dark:text-slate-200 font-semibold text-sm">
             {dragging ? "Release to add files" : "Drag & drop PDFs here"}
           </p>
-          <p className="text-slate-400 text-xs mt-1">
+          <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">
             or click to browse — up to {MAX_FILES} files, {MAX_SIZE_MB}MB each
           </p>
         </div>
@@ -130,11 +130,11 @@ export default function DropZone({ onFilesAccepted }) {
 
       {/* Validation errors */}
       {validationErrors.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 space-y-1">
+        <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl px-4 py-3 space-y-1">
           {validationErrors.map((err, i) => (
             <div key={i} className="flex items-start gap-2">
               <AlertCircle className="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" />
-              <p className="text-red-700 text-xs">{err}</p>
+              <p className="text-red-700 dark:text-red-300 text-xs">{err}</p>
             </div>
           ))}
         </div>
@@ -142,29 +142,29 @@ export default function DropZone({ onFilesAccepted }) {
 
       {/* Queued files */}
       {queued.length > 0 && (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-            <p className="text-slate-700 text-sm font-semibold">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+            <p className="text-slate-700 dark:text-slate-200 text-sm font-semibold">
               {queued.length} file{queued.length !== 1 ? "s" : ""} ready
             </p>
             <button
               onClick={clearAll}
-              className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+              className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-600 transition-colors"
             >
               Clear all
             </button>
           </div>
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-slate-100 dark:divide-slate-800">
             {queued.map((file) => (
               <li key={file.name} className="flex items-center gap-3 px-4 py-3">
                 <FileText className="w-4 h-4 text-blue-500 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-slate-700 text-sm font-medium truncate">{file.name}</p>
-                  <p className="text-slate-400 text-xs">{formatBytes(file.size)}</p>
+                  <p className="text-slate-700 dark:text-slate-200 text-sm font-medium truncate">{file.name}</p>
+                  <p className="text-slate-400 dark:text-slate-500 text-xs">{formatBytes(file.size)}</p>
                 </div>
                 <button
                   onClick={() => removeFile(file.name)}
-                  className="p-1 text-slate-400 hover:text-red-500 transition-colors shrink-0"
+                  className="p-1 text-slate-400 dark:text-slate-500 hover:text-red-500 transition-colors shrink-0"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -173,7 +173,7 @@ export default function DropZone({ onFilesAccepted }) {
           </ul>
 
           {/* Upload button */}
-          <div className="px-4 py-3 border-t border-slate-100 bg-slate-50">
+          <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
             <button
               onClick={handleUploadClick}
               className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors shadow-sm"

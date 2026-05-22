@@ -48,7 +48,7 @@ export default function Login() {
   const displayError = fieldError || error;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-md">
 
         {/* Logo */}
@@ -56,27 +56,27 @@ export default function Login() {
           <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600 shadow-lg mb-4">
             <Gauge className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-slate-800 text-2xl font-bold tracking-tight">
+          <h1 className="text-slate-800 dark:text-slate-100 text-2xl font-bold tracking-tight">
             Calibright
           </h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="text-slate-500 dark:text-slate-500 text-sm mt-1">
             Customer Portal
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm px-8 py-8">
-          <h2 className="text-slate-800 font-semibold text-lg text-center mb-1">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm px-8 py-8">
+          <h2 className="text-slate-800 dark:text-slate-100 font-semibold text-lg text-center mb-1">
             Sign in to your account
           </h2>
-          <p className="text-slate-500 text-sm text-center mb-7">
+          <p className="text-slate-500 dark:text-slate-500 text-sm text-center mb-7">
             Enter your credentials to access your calibration records.
           </p>
 
           {/* Error */}
           {displayError && (
-            <div className="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700 text-sm">{displayError}</p>
+            <div className="mb-5 px-4 py-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg">
+              <p className="text-red-700 dark:text-red-300 text-sm">{displayError}</p>
             </div>
           )}
 
@@ -85,7 +85,7 @@ export default function Login() {
 
             {/* Email */}
             <div>
-              <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-slate-600 dark:text-slate-500 uppercase tracking-wide mb-1.5">
                 Email Address
               </label>
               <input
@@ -94,13 +94,13 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 autoComplete="email"
-                className="w-full px-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
+                className="w-full px-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900 focus:border-blue-400 dark:focus:border-blue-600 transition-all"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-slate-600 dark:text-slate-500 uppercase tracking-wide mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -110,12 +110,12 @@ export default function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   autoComplete="current-password"
-                  className="w-full px-4 py-2.5 pr-11 text-sm bg-slate-50 border border-slate-200 rounded-lg text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
+                  className="w-full px-4 py-2.5 pr-11 text-sm bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900 focus:border-blue-400 dark:focus:border-blue-600 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 transition-colors"
                   tabIndex={-1}
                 >
                   {showPass
@@ -146,9 +146,9 @@ export default function Login() {
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-slate-100" />
-            <span className="text-slate-400 text-xs">Secure access</span>
-            <div className="flex-1 h-px bg-slate-100" />
+            <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+            <span className="text-slate-400 dark:text-slate-500 text-xs">Secure access</span>
+            <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
           </div>
 
           {/* Security features */}
@@ -156,7 +156,7 @@ export default function Login() {
             {securityFeatures.map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-2.5">
                 <Icon className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span className="text-slate-500 text-xs">{text}</span>
+                <span className="text-slate-500 dark:text-slate-500 text-xs">{text}</span>
               </li>
             ))}
           </ul>
@@ -164,8 +164,8 @@ export default function Login() {
 
         {/* Dev credentials hint — remove before production */}
         {import.meta.env.DEV && (
-          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-            <p className="text-amber-700 text-xs font-semibold mb-1">
+          <div className="mt-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3">
+            <p className="text-amber-700 dark:text-amber-300 text-xs font-semibold mb-1">
               Dev credentials
             </p>
             <p className="text-amber-600 text-xs font-mono">
@@ -178,11 +178,11 @@ export default function Login() {
         )}
 
         {/* Footer */}
-        <p className="text-center text-slate-400 text-xs mt-6">
+        <p className="text-center text-slate-400 dark:text-slate-500 text-xs mt-6">
           Having trouble?{" "}
           <a
             href="mailto:support@calibright.com"
-            className="text-blue-600 hover:text-blue-700 underline transition-colors"
+            className="text-blue-600 hover:text-blue-700 dark:text-blue-300 underline transition-colors"
           >
             Contact support
           </a>

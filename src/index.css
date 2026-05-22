@@ -7,6 +7,9 @@
   --font-family-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
+/* ─── Dark mode via .dark class on <html> ──────────────────────────────────── */
+@variant dark (&:where(.dark, .dark *));
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
@@ -14,11 +17,12 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900;
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   ::-webkit-scrollbar       { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { @apply bg-slate-300 rounded-full; }
-  ::-webkit-scrollbar-thumb:hover { @apply bg-slate-400; }
+  ::-webkit-scrollbar-thumb { @apply bg-slate-300 dark:bg-slate-700 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-slate-400 dark:bg-slate-600; }
 }

@@ -50,14 +50,14 @@ function AdminDirectory() {
       {/* Page header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-slate-800 text-lg font-semibold">Customers</h2>
-          <p className="text-slate-500 text-sm mt-0.5">
+          <h2 className="text-slate-800 dark:text-slate-100 text-lg font-semibold">Customers</h2>
+          <p className="text-slate-500 dark:text-slate-500 text-sm mt-0.5">
             All body shops and dealerships with access to the portal.
           </p>
         </div>
-        <div className="shrink-0 flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">
-          <Users className="w-4 h-4 text-slate-500" />
-          <span className="text-slate-600 text-sm font-medium">{customers.length} total</span>
+        <div className="shrink-0 flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg">
+          <Users className="w-4 h-4 text-slate-500 dark:text-slate-500" />
+          <span className="text-slate-600 dark:text-slate-500 text-sm font-medium">{customers.length} total</span>
         </div>
       </div>
 
@@ -65,7 +65,7 @@ function AdminDirectory() {
       <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
 
         {/* Type tabs */}
-        <div className="flex items-center bg-white border border-slate-200 rounded-lg p-1 gap-0.5 shadow-sm shrink-0">
+        <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-1 gap-0.5 shadow-sm shrink-0">
           {TYPE_TABS.map((tab) => (
             <button
               key={tab.key}
@@ -74,7 +74,7 @@ function AdminDirectory() {
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
                 typeFilter === tab.key
                   ? "bg-blue-600 text-white shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50",
+                  : "text-slate-500 dark:text-slate-500 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-slate-800/50",
               ].join(" ")}
             >
               {tab.label}
@@ -82,7 +82,7 @@ function AdminDirectory() {
                 "text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none",
                 typeFilter === tab.key
                   ? "bg-blue-500 text-blue-100"
-                  : "bg-slate-100 text-slate-500",
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-500",
               ].join(" ")}>
                 {counts[tab.key]}
               </span>
@@ -92,18 +92,18 @@ function AdminDirectory() {
 
         {/* Search */}
         <div className="relative flex-1 min-w-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, city, contact, DRP network…"
-            className="w-full pl-9 pr-9 py-2 text-sm bg-white border border-slate-200 rounded-lg shadow-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
+            className="w-full pl-9 pr-9 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm text-slate-700 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
           />
           {search && (
             <button
               onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600  transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -123,8 +123,8 @@ function AdminDirectory() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-16 text-center">
-            <p className="text-slate-500 text-sm font-medium">No customers match your search.</p>
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-6 py-16 text-center">
+            <p className="text-slate-500 dark:text-slate-500 text-sm font-medium">No customers match your search.</p>
           </div>
         )
       )}
@@ -146,10 +146,10 @@ function CustomerSelfView() {
     return (
       <div className="max-w-screen-2xl mx-auto">
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <p className="text-slate-500 text-sm font-medium">
+          <p className="text-slate-500 dark:text-slate-500 text-sm font-medium">
             Your account is not linked to a customer record.
           </p>
-          <p className="text-slate-400 text-xs mt-1">
+          <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">
             Please contact your administrator.
           </p>
         </div>
@@ -160,8 +160,8 @@ function CustomerSelfView() {
   return (
     <div className="max-w-screen-2xl mx-auto space-y-1">
       <div className="mb-5">
-        <h2 className="text-slate-800 text-lg font-semibold">Your Account</h2>
-        <p className="text-slate-500 text-sm mt-0.5">
+        <h2 className="text-slate-800 dark:text-slate-100 text-lg font-semibold">Your Account</h2>
+        <p className="text-slate-500 dark:text-slate-500 text-sm mt-0.5">
           Profile, contact information, and calibration summary for your shop.
         </p>
       </div>

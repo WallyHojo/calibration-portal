@@ -41,14 +41,14 @@ export default function Reports() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-slate-800 text-lg font-semibold">Reports</h2>
-          <p className="text-slate-500 text-sm mt-0.5">
+          <h2 className="text-slate-800 dark:text-slate-100 text-lg font-semibold">Reports</h2>
+          <p className="text-slate-500 dark:text-slate-500 text-sm mt-0.5">
             Profit analytics across all calibration jobs.
           </p>
         </div>
 
         {/* Date range toggle */}
-        <div className="flex items-center bg-white border border-slate-200 rounded-lg p-1 gap-0.5 shadow-sm">
+        <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-1 gap-0.5 shadow-sm">
           {DATE_RANGES.map((r) => (
             <button
               key={r.key}
@@ -57,7 +57,7 @@ export default function Reports() {
                 "px-3 py-1.5 rounded-md text-sm font-medium transition-all",
                 dateRange === r.key
                   ? "bg-blue-600 text-white shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50",
+                  : "text-slate-500 dark:text-slate-500 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-slate-800/50",
               ].join(" ")}
             >
               {r.label}
@@ -67,9 +67,9 @@ export default function Reports() {
       </div>
 
       {/* Mock data notice */}
-      <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+      <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3">
         <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-        <p className="text-amber-700 text-sm">
+        <p className="text-amber-700 dark:text-amber-300 text-sm">
           <span className="font-semibold">Placeholder data — </span>
           Profit figures will be extracted automatically from uploaded PDFs
           once the Azure Document Intelligence pipeline is connected.

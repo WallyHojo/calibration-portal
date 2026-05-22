@@ -11,9 +11,9 @@ import {
 const statusConfig = {
   pending: {
     icon:      Clock,
-    iconClass: "text-slate-400",
+    iconClass: "text-slate-400 dark:text-slate-500",
     label:     "Queued",
-    barClass:  "bg-slate-200",
+    barClass:  "bg-slate-200 dark:bg-slate-700",
     barWidth:  "0%",
   },
   checking: {
@@ -69,15 +69,15 @@ export default function UploadQueue({ items }) {
   if (!items?.length) return null;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-      <div className="px-5 py-4 border-b border-slate-100">
-        <h3 className="text-slate-800 font-semibold text-sm">Upload Progress</h3>
-        <p className="text-slate-400 text-xs mt-0.5">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+        <h3 className="text-slate-800 dark:text-slate-100 font-semibold text-sm">Upload Progress</h3>
+        <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
           {items.filter((i) => i.status === "complete" || i.status === "overwritten").length} of {items.length} complete
         </p>
       </div>
 
-      <ul className="divide-y divide-slate-100">
+      <ul className="divide-y divide-slate-100 dark:divide-slate-800">
         {items.map((item) => {
           const cfg  = statusConfig[item.status] ?? statusConfig.pending;
           const Icon = cfg.icon;
@@ -88,19 +88,19 @@ export default function UploadQueue({ items }) {
                 <FileText className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <p className="text-slate-700 text-sm font-medium truncate">
+                    <p className="text-slate-700 dark:text-slate-200 text-sm font-medium truncate">
                       {item.file.name}
                     </p>
                     <div className="flex items-center gap-1.5 shrink-0">
                       <Icon className={`w-3.5 h-3.5 ${cfg.iconClass}`} />
-                      <span className="text-xs text-slate-500 whitespace-nowrap">
+                      <span className="text-xs text-slate-500 dark:text-slate-500 whitespace-nowrap">
                         {cfg.label}
                       </span>
                     </div>
                   </div>
 
                   {/* Progress bar */}
-                  <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${cfg.barClass}`}
                       style={{ width: cfg.barWidth }}
@@ -109,9 +109,9 @@ export default function UploadQueue({ items }) {
 
                   {/* Meta */}
                   <div className="flex items-center justify-between mt-1.5">
-                    <p className="text-slate-400 text-xs">{formatBytes(item.file.size)}</p>
+                    <p className="text-slate-400 dark:text-slate-500 text-xs">{formatBytes(item.file.size)}</p>
                     {item.recordId && (
-                      <p className="text-slate-400 text-xs font-mono">
+                      <p className="text-slate-400 dark:text-slate-500 text-xs font-mono">
                         → {item.recordId}
                       </p>
                     )}

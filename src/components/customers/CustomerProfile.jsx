@@ -20,20 +20,20 @@ function formatDate(iso) {
 
 function StatCard({ icon: Icon, label, value, color = "blue" }) {
   const colors = {
-    blue:    { icon: "bg-blue-100 text-blue-600",    value: "text-blue-700"    },
-    emerald: { icon: "bg-emerald-100 text-emerald-600", value: "text-emerald-700" },
-    violet:  { icon: "bg-violet-100 text-violet-600",  value: "text-violet-700"  },
-    slate:   { icon: "bg-slate-100 text-slate-600",    value: "text-slate-700"   },
+    blue:    { icon: "bg-blue-100 text-blue-600",    value: "text-blue-700 dark:text-blue-300"    },
+    emerald: { icon: "bg-emerald-100 text-emerald-600", value: "text-emerald-700 dark:text-emerald-300" },
+    violet:  { icon: "bg-violet-100 text-violet-600",  value: "text-violet-700 dark:text-violet-300"  },
+    slate:   { icon: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-500",    value: "text-slate-700 dark:text-slate-200"   },
   };
   const cfg = colors[color] ?? colors.blue;
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex items-center gap-4">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-5 flex items-center gap-4">
       <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${cfg.icon}`}>
         <Icon className="w-5 h-5" />
       </div>
       <div>
-        <p className="text-slate-500 text-xs font-medium">{label}</p>
+        <p className="text-slate-500 dark:text-slate-500 text-xs font-medium">{label}</p>
         <p className={`text-2xl font-bold font-mono mt-0.5 ${cfg.value}`}>{value}</p>
       </div>
     </div>
@@ -42,12 +42,12 @@ function StatCard({ icon: Icon, label, value, color = "blue" }) {
 
 function SectionCard({ title, icon: Icon, children }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-slate-100">
-        <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-          <Icon className="w-4 h-4 text-slate-500" />
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+          <Icon className="w-4 h-4 text-slate-500 dark:text-slate-500" />
         </div>
-        <h3 className="text-slate-700 font-semibold text-sm">{title}</h3>
+        <h3 className="text-slate-700 dark:text-slate-200 font-semibold text-sm">{title}</h3>
       </div>
       <div className="px-5 py-4">{children}</div>
     </div>
@@ -57,9 +57,9 @@ function SectionCard({ title, icon: Icon, children }) {
 function Field({ label, value }) {
   return (
     <div>
-      <p className="text-slate-400 text-xs font-medium uppercase tracking-wide mb-1">{label}</p>
-      <p className="text-slate-700 text-sm font-medium">
-        {value ?? <span className="text-slate-300 italic font-normal">—</span>}
+      <p className="text-slate-400 dark:text-slate-500 text-xs font-medium uppercase tracking-wide mb-1">{label}</p>
+      <p className="text-slate-700 dark:text-slate-200 text-sm font-medium">
+        {value ?? <span className="text-slate-300 dark:text-slate-600 italic font-normal">—</span>}
       </p>
     </div>
   );
@@ -74,33 +74,33 @@ export default function CustomerProfile({ customer }) {
     <div className="space-y-6 max-w-4xl mx-auto">
 
       {/* Hero */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-6 py-5">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-6 py-5">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center shrink-0">
-            <Building2 className="w-7 h-7 text-slate-400" />
+          <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+            <Building2 className="w-7 h-7 text-slate-400 dark:text-slate-500" />
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-slate-800 text-xl font-bold">{customer.name}</h2>
+            <h2 className="text-slate-800 dark:text-slate-100 text-xl font-bold">{customer.name}</h2>
             <div className="flex flex-wrap items-center gap-2 mt-1">
               <span className={[
                 "inline-flex px-2 py-0.5 rounded text-xs font-medium border",
                 customer.type === "dealership"
-                  ? "bg-violet-50 text-violet-700 border-violet-200"
-                  : "bg-blue-50 text-blue-700 border-blue-200",
+                  ? "bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800"
+                  : "bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800",
               ].join(" ")}>
                 {customer.type === "dealership" ? "Dealership" : "Collision Shop"}
               </span>
               {customer.franchiseBrand && (
-                <span className="text-slate-400 text-xs">{customer.franchiseBrand} Franchise</span>
+                <span className="text-slate-400 dark:text-slate-500 text-xs">{customer.franchiseBrand} Franchise</span>
               )}
-              <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
+              <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium border bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800">
                 Active
               </span>
             </div>
           </div>
           <div className="shrink-0 text-right">
-            <p className="text-slate-400 text-xs">Member since</p>
-            <p className="text-slate-600 text-sm font-medium mt-0.5">
+            <p className="text-slate-400 dark:text-slate-500 text-xs">Member since</p>
+            <p className="text-slate-600 dark:text-slate-500 text-sm font-medium mt-0.5">
               {formatDate(customer.onboarded)}
             </p>
           </div>
@@ -124,17 +124,17 @@ export default function CustomerProfile({ customer }) {
             <Field label="Primary Contact" value={customer.contact.name} />
             <Field label="Title"           value={customer.contact.title} />
             <div className="flex items-center gap-2 pt-1">
-              <Mail className="w-4 h-4 text-slate-300 shrink-0" />
+              <Mail className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
               <a
                 href={`mailto:${customer.contact.email}`}
-                className="text-blue-600 hover:text-blue-700 text-sm transition-colors"
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-300 text-sm transition-colors"
               >
                 {customer.contact.email}
               </a>
             </div>
             <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-slate-300 shrink-0" />
-              <span className="text-slate-700 text-sm">{customer.contact.phone}</span>
+              <Phone className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
+              <span className="text-slate-700 dark:text-slate-200 text-sm">{customer.contact.phone}</span>
             </div>
           </div>
         </SectionCard>
@@ -157,14 +157,14 @@ export default function CustomerProfile({ customer }) {
                 {customer.drp.map((network) => (
                   <span
                     key={network}
-                    className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600 font-medium"
+                    className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-500 font-medium"
                   >
                     {network}
                   </span>
                 ))}
               </div>
             ) : (
-              <p className="text-slate-400 text-sm italic">No DRP networks on file.</p>
+              <p className="text-slate-400 dark:text-slate-500 text-sm italic">No DRP networks on file.</p>
             )}
           </SectionCard>
         )}
@@ -178,7 +178,7 @@ export default function CustomerProfile({ customer }) {
             <Field label="Portal Users"   value={`${customer.portalUsers} active`} />
             {pending > 0 && (
               <div className="pt-1">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-xs font-medium text-amber-700">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg text-xs font-medium text-amber-700 dark:text-amber-300">
                   {pending} record{pending !== 1 ? "s" : ""} pending
                 </span>
               </div>

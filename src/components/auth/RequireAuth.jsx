@@ -21,10 +21,10 @@ export default function RequireAuth() {
   // Show nothing while MSAL initializes — avoids flash redirect
   if (initializing) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-500 text-sm">Verifying session…</p>
+          <p className="text-slate-500 dark:text-slate-500 text-sm">Verifying session…</p>
         </div>
       </div>
     );

@@ -46,14 +46,14 @@ export default function Documents() {
       {/* Page header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-slate-800 text-lg font-semibold">Calibration Records</h2>
-          <p className="text-slate-500 text-sm mt-0.5">
+          <h2 className="text-slate-800 dark:text-slate-100 text-lg font-semibold">Calibration Records</h2>
+          <p className="text-slate-500 dark:text-slate-500 text-sm mt-0.5">
             View and download ADAS calibration records across all customers and vehicles.
           </p>
         </div>
-        <div className="shrink-0 flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">
-          <FileText className="w-4 h-4 text-slate-500" />
-          <span className="text-slate-600 text-sm font-medium">{documents.length} total</span>
+        <div className="shrink-0 flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg">
+          <FileText className="w-4 h-4 text-slate-500 dark:text-slate-500" />
+          <span className="text-slate-600 dark:text-slate-500 text-sm font-medium">{documents.length} total</span>
         </div>
       </div>
 

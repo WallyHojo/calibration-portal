@@ -125,17 +125,17 @@ export default function Uploads() {
 
       {/* Page header */}
       <div>
-        <h2 className="text-slate-800 text-lg font-semibold">Uploads</h2>
-        <p className="text-slate-500 text-sm mt-0.5">
+        <h2 className="text-slate-800 dark:text-slate-100 text-lg font-semibold">Uploads</h2>
+        <p className="text-slate-500 dark:text-slate-500 text-sm mt-0.5">
           Upload calibration record PDFs. Files are stored in SharePoint and
           matched to existing records automatically.
         </p>
       </div>
 
       {/* SharePoint notice */}
-      <div className="flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
+      <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl px-4 py-3">
         <AlertCircle className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-        <p className="text-blue-700 text-sm">
+        <p className="text-blue-700 dark:text-blue-300 text-sm">
           <span className="font-semibold">SharePoint connection pending — </span>
           Files are currently processed locally. Once connected, uploads will
           be stored in SharePoint and processed by Azure Document Intelligence.
@@ -143,26 +143,26 @@ export default function Uploads() {
       </div>
 
       {/* Naming convention guide */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm px-5 py-4">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-5 py-4">
         <div className="flex items-center gap-2 mb-3">
-          <CloudUpload className="w-4 h-4 text-slate-400" />
-          <h3 className="text-slate-700 font-semibold text-sm">
+          <CloudUpload className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+          <h3 className="text-slate-700 dark:text-slate-200 font-semibold text-sm">
             PDF Naming Convention
           </h3>
         </div>
-        <p className="text-slate-500 text-xs mb-3">
+        <p className="text-slate-500 dark:text-slate-500 text-xs mb-3">
           For automatic record matching, name your PDFs using this format:
         </p>
-        <div className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2.5 font-mono text-xs text-slate-600">
+        <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2.5 font-mono text-xs text-slate-600 dark:text-slate-500">
           ADAS-2024-03847_Honda_CRV_2023.pdf
         </div>
-        <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-500">
+        <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-500 dark:text-slate-500">
           <div>
-            <span className="font-semibold text-slate-600">Record ID</span>
+            <span className="font-semibold text-slate-600 dark:text-slate-500">Record ID</span>
             {" "}— ADAS-YYYY-NNNNN
           </div>
           <div>
-            <span className="font-semibold text-slate-600">VIN</span>
+            <span className="font-semibold text-slate-600 dark:text-slate-500">VIN</span>
             {" "}— 17-char alphanumeric
           </div>
         </div>
