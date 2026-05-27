@@ -1,38 +1,30 @@
 import { useState, useMemo } from "react";
 import { Car } from "lucide-react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth }          from "../hooks/useAuth";
 import { useCustomerScope } from "../hooks/useCustomerScope";
 import {
-  vehicles,
-  getVehiclesByCustomer,
-  adasSystemOptions,
+  vehicles, getVehiclesByCustomer, adasSystemOptions,
 } from "../data/mockVehicles";
-import VehicleCard from "../components/vehicles/VehicleCard";
+import VehicleCard    from "../components/vehicles/VehicleCard";
 import VehicleFilters from "../components/vehicles/VehicleFilters";
 
-// ─── Filter logic ──────────────────────────────────────────────────────────────
 function filterVehicles(list, { search, customerFilter, adasFilter }) {
   return list.filter((v) => {
     const matchesCustomer = !customerFilter || v.customerId === customerFilter;
-    const matchesAdas     = !adasFilter ||
-      v.records.some((r) => r.adasSystem === adasFilter);
-
+    const matchesAdas     = !adasFilter || v.records.some((r) => r.adasSystem === adasFilter);
     if (!search.trim()) return matchesCustomer && matchesAdas;
-
     const q = search.toLowerCase();
-    const matchesSearch =
-      v.vin.toLowerCase().includes(q)                    ||
-      v.make.toLowerCase().includes(q)                   ||
-      v.model.toLowerCase().includes(q)                  ||
-      String(v.year).includes(q)                         ||
-      v.customer.toLowerCase().includes(q)               ||
-      v.records.some((r) => r.id.toLowerCase().includes(q));
-
-    return matchesCustomer && matchesAdas && matchesSearch;
+    return matchesCustomer && matchesAdas && (
+      v.vin.toLowerCase().includes(q)      ||
+      v.make.toLowerCase().includes(q)     ||
+      v.model.toLowerCase().includes(q)    ||
+      String(v.year).includes(q)           ||
+      v.customer.toLowerCase().includes(q) ||
+      v.records.some((r) => r.id.toLowerCase().includes(q))
+    );
   });
 }
 
-// ─── Shared directory shell ────────────────────────────────────────────────────
 function VehicleDirectory({ sourceVehicles, showCustomerFilter = true }) {
   const [search,         setSearch]         = useState("");
   const [customerFilter, setCustomerFilter] = useState("");
@@ -43,7 +35,6 @@ function VehicleDirectory({ sourceVehicles, showCustomerFilter = true }) {
     [sourceVehicles, search, customerFilter, adasFilter]
   );
 
-  // Build customer options from the vehicles in scope
   const customerOptions = useMemo(() => {
     const unique = [...new Map(
       sourceVehicles.map((v) => [v.customerId, { value: v.customerId, label: v.customer }])
@@ -70,21 +61,18 @@ function VehicleDirectory({ sourceVehicles, showCustomerFilter = true }) {
 
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-          {filtered.map((v) => (
-            <VehicleCard key={v.vin} vehicle={v} />
-          ))}
+          {filtered.map((v) => <VehicleCard key={v.vin} vehicle={v} />)}
         </div>
       ) : (
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-6 py-16 text-center">
-          <p className="text-slate-500 dark:text-slate-500 text-sm font-medium">No vehicles match your search.</p>
-          <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Try adjusting your filters.</p>
+        <div className="card px-6 py-16 text-center">
+          <p className="text-sm font-medium text-secondary">No vehicles match your search.</p>
+          <p className="text-xs text-muted mt-1">Try adjusting your filters.</p>
         </div>
       )}
     </div>
   );
 }
 
-// ─── Page ──────────────────────────────────────────────────────────────────────
 export default function Vehicles() {
   const { isAdmin }    = useAuth();
   const { customerId } = useCustomerScope();
@@ -95,20 +83,18 @@ export default function Vehicles() {
 
   return (
     <div className="space-y-5 max-w-screen-2xl mx-auto">
-
-      {/* Page header */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="page-header">
         <div>
-          <h2 className="text-slate-800 dark:text-slate-100 text-lg font-semibold">Vehicles</h2>
-          <p className="text-slate-500 dark:text-slate-500 text-sm mt-0.5">
+          <h2 className="page-title">Vehicles</h2>
+          <p className="page-description">
             {isAdmin
               ? "All vehicles serviced across every customer."
               : "Vehicles associated with your account."}
           </p>
         </div>
-        <div className="shrink-0 flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg">
-          <Car className="w-4 h-4 text-slate-500 dark:text-slate-500" />
-          <span className="text-slate-600 dark:text-slate-500 text-sm font-medium">
+        <div className="card flex items-center gap-2 px-3 py-1.5">
+          <Car className="w-4 h-4 text-muted" />
+          <span className="text-sm font-medium text-secondary">
             {scopedVehicles.length} vehicle{scopedVehicles.length !== 1 ? "s" : ""}
           </span>
         </div>

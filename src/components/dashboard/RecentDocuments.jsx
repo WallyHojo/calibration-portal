@@ -1,102 +1,60 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { recentDocuments } from "../../data/mockDocuments";
-
-const statusConfig = {
-  complete: {
-    label: "Complete",
-    className: "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
-  },
-  pending: {
-    label: "Pending",
-    className: "bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
-  },
-};
-
-function StatusBadge({ status }) {
-  const cfg = statusConfig[status] ?? statusConfig.complete;
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${cfg.className}`}>
-      {cfg.label}
-    </span>
-  );
-}
+import Badge from "../ui/Badge";
 
 function formatDate(iso) {
   return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
+    month: "short", day: "numeric", year: "numeric",
   }).format(new Date(iso));
 }
 
 export default function RecentDocuments() {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-        <h3 className="text-slate-800 dark:text-slate-100 font-semibold text-sm">Recent Calibrations</h3>
+    <div className="card overflow-hidden">
+      <div className="card-header">
+        <h3 className="text-sm font-semibold text-primary">Recent Calibrations</h3>
         <Link
           to="/documents"
-          className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-300 transition-colors"
+          className="flex items-center gap-1 text-xs font-medium text-accent hover:opacity-80 transition-opacity"
         >
           View all <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      <div className="table-wrapper">
+        <table className="table">
           <thead>
-            <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-              <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3">
-                Record ID
-              </th>
-              <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3">
-                Vehicle
-              </th>
-              <th className="hidden md:table-cell text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3">
-                ADAS System
-              </th>
-              <th className="hidden lg:table-cell text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3">
-                Customer
-              </th>
-              <th className="hidden lg:table-cell text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3">
-                Date
-              </th>
-              <th className="text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3">
-                Status
-              </th>
+            <tr>
+              <th>Record ID</th>
+              <th>Vehicle</th>
+              <th className="hidden md:table-cell">ADAS System</th>
+              <th className="hidden lg:table-cell">Customer</th>
+              <th className="hidden lg:table-cell">Date</th>
+              <th>Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+          <tbody>
             {recentDocuments.map((doc) => (
-              <tr
-                key={doc.id}
-                className="hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-slate-800/50 transition-colors cursor-pointer"
-              >
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 dark:text-slate-500 whitespace-nowrap">
-                  {doc.id}
-                </td>
-                <td className="px-5 py-3.5">
-                  <p className="text-slate-700 dark:text-slate-200 font-medium leading-tight whitespace-nowrap">
+              <tr key={doc.id}>
+                <td className="font-mono text-xs text-muted whitespace-nowrap">{doc.id}</td>
+                <td className="whitespace-nowrap">
+                  <p className="font-medium text-secondary">
                     {doc.year} {doc.make} {doc.model}
                   </p>
-                  <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5 font-mono">
-                    {doc.vin}
-                  </p>
+                  <p className="font-mono text-xs text-muted mt-0.5">{doc.vin}</p>
                 </td>
-                <td className="hidden md:table-cell px-5 py-3.5 text-slate-600 dark:text-slate-500 whitespace-nowrap">
+                <td className="hidden md:table-cell whitespace-nowrap text-tertiary">
                   {doc.adasSystem}
                 </td>
-                <td className="hidden lg:table-cell px-5 py-3.5 text-slate-600 dark:text-slate-500 whitespace-nowrap">
+                <td className="hidden lg:table-cell whitespace-nowrap text-tertiary">
                   {doc.customer}
                 </td>
-                <td className="hidden lg:table-cell px-5 py-3.5 font-mono text-xs text-slate-500 dark:text-slate-500 whitespace-nowrap">
+                <td className="hidden lg:table-cell font-mono text-xs text-muted whitespace-nowrap">
                   {formatDate(doc.calibrationDate)}
                 </td>
-                <td className="px-5 py-3.5">
-                  <StatusBadge status={doc.status} />
+                <td className="whitespace-nowrap">
+                  <Badge variant={doc.status}>{doc.status === "complete" ? "Complete" : "Pending"}</Badge>
                 </td>
               </tr>
             ))}

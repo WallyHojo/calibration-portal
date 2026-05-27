@@ -3,16 +3,13 @@ import { Upload, Car, UserPlus, FileBarChart2 } from "lucide-react";
 import { quickActions } from "../../data/dashboardData";
 
 const iconMap = {
-  Upload,
-  Car,
-  UserPlus,
-  FileBarChart: FileBarChart2,
+  Upload, Car, UserPlus, FileBarChart: FileBarChart2,
 };
 
 export default function QuickActions() {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-5">
-      <h3 className="text-slate-800 dark:text-slate-100 font-semibold text-sm mb-4">Quick Actions</h3>
+    <div className="card p-5">
+      <h3 className="text-sm font-semibold text-primary mb-4">Quick Actions</h3>
       <div className="grid grid-cols-2 gap-3">
         {quickActions.map((action) => {
           const Icon = iconMap[action.icon] ?? Upload;
@@ -20,12 +17,27 @@ export default function QuickActions() {
             <Link
               key={action.id}
               to={action.path}
-              className="flex flex-col items-center gap-2 p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-300 hover:bg-blue-50 dark:bg-blue-950/30 transition-all group text-center"
+              className="group flex flex-col items-center gap-2 p-3 rounded-lg border transition-all text-center"
+              style={{
+                borderColor: "var(--border-base)",
+                backgroundColor: "var(--surface-card)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--accent-border)";
+                e.currentTarget.style.backgroundColor = "var(--accent-subtle)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--border-base)";
+                e.currentTarget.style.backgroundColor = "var(--surface-card)";
+              }}
             >
-              <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-100 flex items-center justify-center transition-colors">
-                <Icon className="w-4 h-4 text-slate-500 dark:text-slate-500 group-hover:text-blue-600 transition-colors" />
+              <div
+                className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
+                style={{ backgroundColor: "var(--surface-inset)" }}
+              >
+                <Icon className="w-4 h-4 text-muted group-hover:text-accent transition-colors" />
               </div>
-              <span className="text-xs font-medium text-slate-600 dark:text-slate-500 group-hover:text-blue-700 transition-colors leading-tight">
+              <span className="text-xs font-medium text-tertiary group-hover:text-accent transition-colors leading-tight">
                 {action.label}
               </span>
             </Link>

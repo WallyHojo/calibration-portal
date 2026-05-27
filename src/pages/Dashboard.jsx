@@ -1,9 +1,9 @@
-import WelcomeBanner from "../components/dashboard/WelcomeBanner";
-import StatsGrid from "../components/dashboard/StatsGrid";
-import QuickActions from "../components/dashboard/QuickActions";
-import RecentDocuments from "../components/dashboard/RecentDocuments";
+import WelcomeBanner    from "../components/dashboard/WelcomeBanner";
+import StatsGrid        from "../components/dashboard/StatsGrid";
+import QuickActions     from "../components/dashboard/QuickActions";
+import RecentDocuments  from "../components/dashboard/RecentDocuments";
 import PendingDocuments from "../components/dashboard/PendingDocuments";
-import ActivityFeed from "../components/dashboard/ActivityFeed";
+import ActivityFeed     from "../components/dashboard/ActivityFeed";
 
 export default function Dashboard() {
   return (

@@ -8,27 +8,25 @@ export default function DashboardShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
-      {/* Desktop sidebar */}
+    <div className="min-h-screen flex" style={{ backgroundColor: "var(--surface-page)" }}>
       <Sidebar />
+      <MobileSidebar open={mobileOpen} onClose={() => setMobileOpen(false)} />
 
-      {/* Mobile sidebar */}
-      <MobileSidebar
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-      />
-
-      {/* Main content area — offset by sidebar width on desktop */}
       <div className="flex-1 flex flex-col min-w-0 lg:ml-64">
         <Header onMenuClick={() => setMobileOpen(true)} />
 
-        <main className="flex-1 p-4 sm:p-6 bg-slate-50 dark:bg-slate-950">
+        <main className="flex-1 p-4 sm:p-6" style={{ backgroundColor: "var(--surface-page)" }}>
           <Outlet />
         </main>
 
-        {/* Footer */}
-        <footer className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-          <p className="text-xs text-slate-400 dark:text-slate-500">
+        <footer
+          className="px-6 py-4 border-t"
+          style={{
+            backgroundColor: "var(--surface-card)",
+            borderColor: "var(--border-base)",
+          }}
+        >
+          <p className="text-xs text-muted">
             Calibright Customer Portal &mdash; &copy; {new Date().getFullYear()} &mdash; v2.4.1
           </p>
         </footer>

@@ -1,4 +1,5 @@
 import { AlertTriangle, X, Upload, Ban } from "lucide-react";
+import Button from "../ui/Button";
 
 export default function DuplicateWarningModal({ duplicates, onOverwrite, onCancel }) {
   if (!duplicates?.length) return null;
@@ -7,64 +8,43 @@ export default function DuplicateWarningModal({ duplicates, onOverwrite, onCance
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0"
+        style={{ backgroundColor: "var(--surface-overlay)" }}
         onClick={onCancel}
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-
+      <div className="relative w-full max-w-md card overflow-hidden" style={{ boxShadow: "var(--shadow-overlay)" }}>
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 px-6 py-5 border-b border-slate-100 dark:border-slate-800">
+        <div className="card-header">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: "var(--warning-bg)" }}>
+              <AlertTriangle className="w-5 h-5" style={{ color: "var(--warning-icon)" }} />
             </div>
             <div>
-              <h3 className="text-slate-800 dark:text-slate-100 font-semibold text-sm">
-                Duplicate Records Detected
-              </h3>
-              <p className="text-slate-500 dark:text-slate-500 text-xs mt-0.5">
+              <h3 className="text-sm font-semibold text-primary">Duplicate Records Detected</h3>
+              <p className="text-xs text-muted mt-0.5">
                 {duplicates.length} file{duplicates.length !== 1 ? "s" : ""} match an existing record
               </p>
             </div>
           </div>
-          <button
-            onClick={onCancel}
-            className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800 rounded-lg transition-colors shrink-0"
-          >
+          <button onClick={onCancel} className="btn btn-ghost btn-sm">
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Duplicate list */}
-        <div className="px-6 py-4 space-y-3 max-h-64 overflow-y-auto">
+        {/* List */}
+        <div className="px-6 py-4 space-y-3 max-h-64 overflow-y-auto scrollbar-thin">
           {duplicates.map((dup) => (
-            <div
-              key={dup.file.name}
-              className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-4 py-3"
-            >
-              <p className="text-slate-700 dark:text-slate-200 text-sm font-medium truncate">
-                {dup.file.name}
-              </p>
-              <p className="text-slate-500 dark:text-slate-500 text-xs mt-1">
-                Matches existing record{" "}
-                <span className="font-mono font-semibold text-slate-600 dark:text-slate-500">
-                  {dup.existingRecord.id}
-                </span>
+            <div key={dup.file.name} className="rounded-lg px-4 py-3 border" style={{ backgroundColor: "var(--warning-bg)", borderColor: "var(--warning-border)" }}>
+              <p className="text-sm font-medium text-secondary truncate">{dup.file.name}</p>
+              <p className="text-xs text-tertiary mt-1">
+                Matches record <span className="font-mono font-semibold text-secondary">{dup.existingRecord.id}</span>
               </p>
               {dup.matchType === "vin" && (
-                <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
-                  Matched by VIN:{" "}
-                  <span className="font-mono">{dup.existingRecord.vin}</span>
-                </p>
+                <p className="text-xs text-muted mt-0.5">Matched by VIN: <span className="font-mono">{dup.existingRecord.vin}</span></p>
               )}
-              {dup.matchType === "filename" && (
-                <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
-                  Matched by filename
-                </p>
-              )}
-              <p className="text-amber-700 dark:text-amber-300 text-xs mt-2 font-medium">
+              <p className="text-xs font-medium mt-2" style={{ color: "var(--warning-text)" }}>
                 Uploading will overwrite the existing record.
               </p>
             </div>
@@ -72,23 +52,16 @@ export default function DuplicateWarningModal({ duplicates, onOverwrite, onCance
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3 px-6 py-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-          <button
-            onClick={onCancel}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800 text-sm font-medium transition-colors"
-          >
-            <Ban className="w-4 h-4" />
+        <div className="card-footer flex items-center gap-3">
+          <Button variant="secondary" size="md" icon={Ban} className="flex-1 justify-center" onClick={onCancel}>
             Cancel Upload
-          </button>
-          <button
-            onClick={onOverwrite}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold transition-colors shadow-sm"
+          </Button>
+          <Button variant="primary" size="md" icon={Upload} className="flex-1 justify-center" onClick={onOverwrite}
+            style={{ backgroundColor: "var(--warning-icon)", color: "#fff" }}
           >
-            <Upload className="w-4 h-4" />
             Overwrite
-          </button>
+          </Button>
         </div>
-
       </div>
     </div>
   );

@@ -1,16 +1,10 @@
 import {
-  Building2,
-  MapPin,
-  Phone,
-  Mail,
-  User,
-  FileText,
-  Car,
-  Users,
-  Shield,
-  CalendarDays,
+  Building2, MapPin, Phone, Mail,
+  User, FileText, Car, Users, Shield, CalendarDays,
 } from "lucide-react";
 import { getDocumentsByCustomer } from "../../data/mockDocuments";
+import { SectionCard }            from "../ui/Card";
+import { Field }                  from "../ui/primitives";
 
 function formatDate(iso) {
   return new Intl.DateTimeFormat("en-US", {
@@ -18,49 +12,30 @@ function formatDate(iso) {
   }).format(new Date(iso));
 }
 
-function StatCard({ icon: Icon, label, value, color = "blue" }) {
-  const colors = {
-    blue:    { icon: "bg-blue-100 text-blue-600",    value: "text-blue-700 dark:text-blue-300"    },
-    emerald: { icon: "bg-emerald-100 text-emerald-600", value: "text-emerald-700 dark:text-emerald-300" },
-    violet:  { icon: "bg-violet-100 text-violet-600",  value: "text-violet-700 dark:text-violet-300"  },
-    slate:   { icon: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-500",    value: "text-slate-700 dark:text-slate-200"   },
-  };
-  const cfg = colors[color] ?? colors.blue;
+function formatDateShort(iso) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short", day: "numeric", year: "numeric",
+  }).format(new Date(iso));
+}
 
+function StatCard({ icon: Icon, label, value, tokenColor }) {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-5 flex items-center gap-4">
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${cfg.icon}`}>
-        <Icon className="w-5 h-5" />
+    <div className="card p-5 flex items-center gap-4">
+      <div
+        className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+        style={{ backgroundColor: `var(--${tokenColor}-bg, var(--surface-inset))` }}
+      >
+        <Icon className="w-5 h-5" style={{ color: `var(--${tokenColor}-text, var(--text-tertiary))` }} />
       </div>
       <div>
-        <p className="text-slate-500 dark:text-slate-500 text-xs font-medium">{label}</p>
-        <p className={`text-2xl font-bold font-mono mt-0.5 ${cfg.value}`}>{value}</p>
+        <p className="text-xs text-muted font-medium">{label}</p>
+        <p
+          className="text-2xl font-bold font-mono mt-0.5"
+          style={{ color: `var(--${tokenColor}-text, var(--text-secondary))` }}
+        >
+          {value}
+        </p>
       </div>
-    </div>
-  );
-}
-
-function SectionCard({ title, icon: Icon, children }) {
-  return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-        <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-          <Icon className="w-4 h-4 text-slate-500 dark:text-slate-500" />
-        </div>
-        <h3 className="text-slate-700 dark:text-slate-200 font-semibold text-sm">{title}</h3>
-      </div>
-      <div className="px-5 py-4">{children}</div>
-    </div>
-  );
-}
-
-function Field({ label, value }) {
-  return (
-    <div>
-      <p className="text-slate-400 dark:text-slate-500 text-xs font-medium uppercase tracking-wide mb-1">{label}</p>
-      <p className="text-slate-700 dark:text-slate-200 text-sm font-medium">
-        {value ?? <span className="text-slate-300 dark:text-slate-600 italic font-normal">—</span>}
-      </p>
     </div>
   );
 }
@@ -74,72 +49,70 @@ export default function CustomerProfile({ customer }) {
     <div className="space-y-6 max-w-4xl mx-auto">
 
       {/* Hero */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm px-6 py-5">
+      <div className="card px-6 py-5">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-            <Building2 className="w-7 h-7 text-slate-400 dark:text-slate-500" />
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ backgroundColor: "var(--surface-inset)" }}
+          >
+            <Building2 className="w-7 h-7 text-muted" />
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-slate-800 dark:text-slate-100 text-xl font-bold">{customer.name}</h2>
+            <h2 className="text-xl font-bold text-primary">{customer.name}</h2>
             <div className="flex flex-wrap items-center gap-2 mt-1">
-              <span className={[
-                "inline-flex px-2 py-0.5 rounded text-xs font-medium border",
-                customer.type === "dealership"
-                  ? "bg-violet-50 dark:bg-violet-950/30 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800"
-                  : "bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800",
-              ].join(" ")}>
+              <span
+                className="badge"
+                style={{
+                  backgroundColor: customer.type === "dealership" ? "var(--violet-bg)" : "var(--info-bg)",
+                  color:           customer.type === "dealership" ? "var(--violet-text)" : "var(--info-text)",
+                  borderColor:     customer.type === "dealership" ? "var(--violet-border)" : "var(--info-border)",
+                }}
+              >
                 {customer.type === "dealership" ? "Dealership" : "Collision Shop"}
               </span>
               {customer.franchiseBrand && (
-                <span className="text-slate-400 dark:text-slate-500 text-xs">{customer.franchiseBrand} Franchise</span>
+                <span className="text-xs text-muted">{customer.franchiseBrand} Franchise</span>
               )}
-              <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium border bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800">
-                Active
-              </span>
+              <span className="badge badge-success">Active</span>
             </div>
           </div>
           <div className="shrink-0 text-right">
-            <p className="text-slate-400 dark:text-slate-500 text-xs">Member since</p>
-            <p className="text-slate-600 dark:text-slate-500 text-sm font-medium mt-0.5">
-              {formatDate(customer.onboarded)}
-            </p>
+            <p className="text-xs text-muted">Member since</p>
+            <p className="text-sm font-medium text-tertiary mt-0.5">{formatDate(customer.onboarded)}</p>
           </div>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <StatCard icon={FileText} label="Total Records"    value={customer.totalCalibrations}     color="blue"    />
-        <StatCard icon={Car}      label="This Month"       value={customer.calibrationsThisMonth} color="emerald" />
-        <StatCard icon={Shield}   label="Complete"         value={complete}                       color="slate"   />
-        <StatCard icon={Users}    label="Portal Users"     value={customer.portalUsers}           color="violet"  />
+        <StatCard icon={FileText}  label="Total Records"  value={customer.totalCalibrations}     tokenColor="info"    />
+        <StatCard icon={Car}       label="This Month"     value={customer.calibrationsThisMonth} tokenColor="success" />
+        <StatCard icon={Shield}    label="Complete"       value={complete}                       tokenColor="neutral" />
+        <StatCard icon={Users}     label="Portal Users"   value={customer.portalUsers}           tokenColor="violet"  />
       </div>
 
       {/* Detail grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-        {/* Contact info */}
         <SectionCard title="Contact Information" icon={User}>
           <div className="grid grid-cols-1 gap-y-4">
             <Field label="Primary Contact" value={customer.contact.name} />
             <Field label="Title"           value={customer.contact.title} />
             <div className="flex items-center gap-2 pt-1">
-              <Mail className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
+              <Mail className="w-4 h-4 text-disabled shrink-0" />
               <a
                 href={`mailto:${customer.contact.email}`}
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-300 text-sm transition-colors"
+                className="text-sm text-accent hover:opacity-80 transition-opacity"
               >
                 {customer.contact.email}
               </a>
             </div>
             <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
-              <span className="text-slate-700 dark:text-slate-200 text-sm">{customer.contact.phone}</span>
+              <Phone className="w-4 h-4 text-disabled shrink-0" />
+              <span className="text-sm text-secondary">{customer.contact.phone}</span>
             </div>
           </div>
         </SectionCard>
 
-        {/* Location */}
         <SectionCard title="Location" icon={MapPin}>
           <div className="grid grid-cols-1 gap-y-4">
             <Field label="Street"   value={customer.address.street} />
@@ -149,43 +122,37 @@ export default function CustomerProfile({ customer }) {
           </div>
         </SectionCard>
 
-        {/* DRP Networks — collision shops only */}
         {customer.type === "collision" && (
           <SectionCard title="DRP Insurance Networks" icon={Shield}>
             {customer.drp?.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {customer.drp.map((network) => (
-                  <span
-                    key={network}
-                    className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-500 font-medium"
-                  >
+                  <span key={network} className="badge badge-neutral px-3 py-1.5 text-sm">
                     {network}
                   </span>
                 ))}
               </div>
             ) : (
-              <p className="text-slate-400 dark:text-slate-500 text-sm italic">No DRP networks on file.</p>
+              <p className="text-sm text-muted italic">No DRP networks on file.</p>
             )}
           </SectionCard>
         )}
 
-        {/* Account summary */}
         <SectionCard title="Account Summary" icon={CalendarDays}>
           <div className="grid grid-cols-1 gap-y-4">
-            <Field label="Customer ID"    value={customer.id} />
-            <Field label="Onboarded"      value={formatDate(customer.onboarded)} />
-            <Field label="Last Activity"  value={formatDate(customer.lastActivity)} />
-            <Field label="Portal Users"   value={`${customer.portalUsers} active`} />
+            <Field label="Customer ID"   value={customer.id} />
+            <Field label="Onboarded"     value={formatDate(customer.onboarded)} />
+            <Field label="Last Activity" value={formatDateShort(customer.lastActivity)} />
+            <Field label="Portal Users"  value={`${customer.portalUsers} active`} />
             {pending > 0 && (
               <div className="pt-1">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg text-xs font-medium text-amber-700 dark:text-amber-300">
+                <span className="badge badge-warning px-3 py-1.5 text-xs">
                   {pending} record{pending !== 1 ? "s" : ""} pending
                 </span>
               </div>
             )}
           </div>
         </SectionCard>
-
       </div>
     </div>
   );

@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { SortIcon } from "../ui/primitives";
 
 function formatCurrency(val) {
   return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
+    style: "currency", currency: "USD", minimumFractionDigits: 2,
   }).format(val);
 }
 
@@ -16,51 +14,39 @@ function formatDate(iso) {
 }
 
 function MarginBar({ margin }) {
-  const color =
-    margin >= 50 ? "bg-emerald-400" :
-    margin >= 35 ? "bg-blue-400"    :
-                   "bg-amber-400";
+  const color = margin >= 50 ? "var(--success-icon)"
+              : margin >= 35 ? "var(--accent)"
+              : "var(--warning-icon)";
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+      <div className="progress-track flex-1">
         <div
-          className={`h-full rounded-full ${color}`}
-          style={{ width: `${Math.min(margin, 100)}%` }}
+          className="progress-fill"
+          style={{ width: `${Math.min(margin, 100)}%`, backgroundColor: color }}
         />
       </div>
-      <span className="font-mono text-xs text-slate-500 dark:text-slate-500 w-10 text-right">
-        {margin}%
-      </span>
+      <span className="font-mono text-xs text-muted w-10 text-right">{margin}%</span>
     </div>
   );
 }
 
 const COLUMNS = [
-  { key: "id",         label: "Record ID",    sortable: true  },
-  { key: "date",       label: "Date",         sortable: true  },
-  { key: "vehicle",    label: "Vehicle",      sortable: true  },
-  { key: "adasSystem", label: "ADAS System",  sortable: true  },
-  { key: "customer",   label: "Customer",     sortable: true  },
-  { key: "listPrice",  label: "List Price",   sortable: true  },
-  { key: "costPrice",  label: "Cost",         sortable: true  },
-  { key: "profit",     label: "Profit",       sortable: true  },
-  { key: "margin",     label: "Margin",       sortable: true  },
+  { key: "id",         label: "Record ID",   sortable: true },
+  { key: "date",       label: "Date",        sortable: true },
+  { key: "vehicle",    label: "Vehicle",     sortable: true },
+  { key: "adasSystem", label: "ADAS System", sortable: true },
+  { key: "customer",   label: "Customer",    sortable: true },
+  { key: "listPrice",  label: "List Price",  sortable: true },
+  { key: "costPrice",  label: "Cost",        sortable: true },
+  { key: "profit",     label: "Profit",      sortable: true },
+  { key: "margin",     label: "Margin",      sortable: true },
 ];
-
-function SortIcon({ column, sort }) {
-  if (sort.key !== column)
-    return <ChevronsUpDown className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />;
-  return sort.dir === "asc"
-    ? <ChevronUp   className="w-3.5 h-3.5 text-blue-500" />
-    : <ChevronDown className="w-3.5 h-3.5 text-blue-500" />;
-}
 
 function sortRecords(records, { key, dir }) {
   return [...records].sort((a, b) => {
-    const valA = a[key];
-    const valB = b[key];
-    if (valA < valB) return dir === "asc" ? -1 : 1;
-    if (valA > valB) return dir === "asc" ? 1  : -1;
+    const A = a[key]; const B = b[key];
+    if (A < B) return dir === "asc" ? -1 :  1;
+    if (A > B) return dir === "asc" ?  1 : -1;
     return 0;
   });
 }
@@ -77,14 +63,8 @@ export default function ProfitTable({ records }) {
   }
 
   const sorted = sortRecords(records, sort);
-
-  // Totals row
   const totals = records.reduce(
-    (acc, r) => ({
-      listPrice: acc.listPrice + r.listPrice,
-      costPrice: acc.costPrice + r.costPrice,
-      profit:    acc.profit    + r.profit,
-    }),
+    (acc, r) => ({ listPrice: acc.listPrice + r.listPrice, costPrice: acc.costPrice + r.costPrice, profit: acc.profit + r.profit }),
     { listPrice: 0, costPrice: 0, profit: 0 }
   );
   const avgMargin = records.length
@@ -92,26 +72,23 @@ export default function ProfitTable({ records }) {
     : 0;
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-      <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-        <h3 className="text-slate-800 dark:text-slate-100 font-semibold text-sm">Profit Per Job</h3>
-        <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">
-          Click any column header to sort. Profit = List Price − Cost.
-        </p>
+    <div className="card overflow-hidden">
+      <div className="card-header flex-col sm:flex-row items-start sm:items-center">
+        <div>
+          <h3 className="text-sm font-semibold text-primary">Profit Per Job</h3>
+          <p className="text-xs text-muted mt-0.5">Click any column header to sort. Profit = List Price − Cost.</p>
+        </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      <div className="table-wrapper">
+        <table className="table">
           <thead>
-            <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+            <tr>
               {COLUMNS.map((col) => (
                 <th
                   key={col.key}
                   onClick={() => col.sortable && handleSort(col.key)}
-                  className={[
-                    "text-left text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide px-5 py-3 whitespace-nowrap",
-                    col.sortable ? "cursor-pointer select-none hover:text-slate-700 dark:text-slate-200" : "",
-                  ].join(" ")}
+                  className={col.sortable ? "cursor-pointer select-none hover:text-primary" : ""}
                 >
                   <div className="flex items-center gap-1.5">
                     {col.label}
@@ -121,59 +98,36 @@ export default function ProfitTable({ records }) {
               ))}
             </tr>
           </thead>
-
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+          <tbody>
             {sorted.map((r) => (
-              <tr key={r.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 dark:bg-slate-800/50 transition-colors">
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 dark:text-slate-500 whitespace-nowrap">
-                  {r.id}
-                </td>
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-500 dark:text-slate-500 whitespace-nowrap">
-                  {formatDate(r.date)}
-                </td>
-                <td className="px-5 py-3.5 whitespace-nowrap">
-                  <p className="text-slate-700 dark:text-slate-200 font-medium">{r.vehicle}</p>
-                </td>
-                <td className="px-5 py-3.5 text-slate-600 dark:text-slate-500 whitespace-nowrap">
-                  {r.adasSystem}
-                </td>
-                <td className="px-5 py-3.5 text-slate-600 dark:text-slate-500 whitespace-nowrap">
-                  {r.customer}
-                </td>
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-600 dark:text-slate-500 whitespace-nowrap">
-                  {formatCurrency(r.listPrice)}
-                </td>
-                <td className="px-5 py-3.5 font-mono text-xs text-slate-600 dark:text-slate-500 whitespace-nowrap">
-                  {formatCurrency(r.costPrice)}
-                </td>
-                <td className="px-5 py-3.5 font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-300 whitespace-nowrap">
+              <tr key={r.id}>
+                <td className="font-mono text-xs text-muted whitespace-nowrap">{r.id}</td>
+                <td className="font-mono text-xs text-muted whitespace-nowrap">{formatDate(r.date)}</td>
+                <td className="font-medium text-secondary whitespace-nowrap">{r.vehicle}</td>
+                <td className="text-tertiary whitespace-nowrap">{r.adasSystem}</td>
+                <td className="text-tertiary whitespace-nowrap">{r.customer}</td>
+                <td className="font-mono text-xs text-tertiary whitespace-nowrap">{formatCurrency(r.listPrice)}</td>
+                <td className="font-mono text-xs text-tertiary whitespace-nowrap">{formatCurrency(r.costPrice)}</td>
+                <td className="font-mono text-xs font-semibold whitespace-nowrap" style={{ color: "var(--success-text)" }}>
                   {formatCurrency(r.profit)}
                 </td>
-                <td className="px-5 py-3.5 whitespace-nowrap min-w-30">
+                <td className="whitespace-nowrap min-w-[120px]">
                   <MarginBar margin={r.margin} />
                 </td>
               </tr>
             ))}
           </tbody>
-
-          {/* Totals row */}
           <tfoot>
-            <tr className="border-t-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-              <td colSpan={5} className="px-5 py-3 text-xs font-semibold text-slate-500 dark:text-slate-500 uppercase tracking-wide">
+            <tr>
+              <td colSpan={5} className="font-semibold text-muted uppercase tracking-wide text-xs">
                 Totals — {records.length} jobs
               </td>
-              <td className="px-5 py-3 font-mono text-xs font-semibold text-slate-700 dark:text-slate-200">
-                {formatCurrency(totals.listPrice)}
-              </td>
-              <td className="px-5 py-3 font-mono text-xs font-semibold text-slate-700 dark:text-slate-200">
-                {formatCurrency(totals.costPrice)}
-              </td>
-              <td className="px-5 py-3 font-mono text-xs font-bold text-emerald-700 dark:text-emerald-300">
+              <td className="font-mono text-xs font-semibold text-secondary">{formatCurrency(totals.listPrice)}</td>
+              <td className="font-mono text-xs font-semibold text-secondary">{formatCurrency(totals.costPrice)}</td>
+              <td className="font-mono text-xs font-bold" style={{ color: "var(--success-text)" }}>
                 {formatCurrency(totals.profit)}
               </td>
-              <td className="px-5 py-3">
-                <MarginBar margin={avgMargin} />
-              </td>
+              <td className="min-w-[120px]"><MarginBar margin={avgMargin} /></td>
             </tr>
           </tfoot>
         </table>
