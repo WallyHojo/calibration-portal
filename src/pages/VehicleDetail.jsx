@@ -4,7 +4,7 @@ import {
   CheckCircle2, Clock, ExternalLink, Download,
 } from "lucide-react";
 import { getVehicleByVin } from "../data/mockVehicles";
-import { EmptyState }      from "../components/ui/primitives";
+import { EmptyState }      from "../components/ui/Primitives";
 import Badge               from "../components/ui/Badge";
 
 function formatDateLong(iso) {
