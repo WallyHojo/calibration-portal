@@ -111,7 +111,7 @@ export default function ProfitTable({ records }) {
                 <td className="font-mono text-xs font-semibold whitespace-nowrap" style={{ color: "var(--success-text)" }}>
                   {formatCurrency(r.profit)}
                 </td>
-                <td className="whitespace-nowrap min-w-[120px]">
+                <td className="whitespace-nowrap min-w-30">
                   <MarginBar margin={r.margin} />
                 </td>
               </tr>
@@ -127,7 +127,7 @@ export default function ProfitTable({ records }) {
               <td className="font-mono text-xs font-bold" style={{ color: "var(--success-text)" }}>
                 {formatCurrency(totals.profit)}
               </td>
-              <td className="min-w-[120px]"><MarginBar margin={avgMargin} /></td>
+              <td className="min-w-30"><MarginBar margin={avgMargin} /></td>
             </tr>
           </tfoot>
         </table>

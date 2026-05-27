@@ -75,7 +75,7 @@ export default function DocumentDetail() {
             </h2>
             <p className="text-sm text-muted mt-1">{doc.adasSystem}</p>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
             <Badge variant={doc.calibrationType === "Dynamic" ? "dynamic" : "static"}>
               {doc.calibrationType}
             </Badge>

@@ -16,14 +16,15 @@ scoped to their own data.
 5. [Data Layer](#data-layer)
 6. [Services](#services)
 7. [Context & Hooks](#context--hooks)
-8. [Routing & Access Control](#routing--access-control)
-9. [Authentication](#authentication)
-10. [Theme System](#theme-system)
-11. [Deployment](#deployment)
-12. [SharePoint Integration](#sharepoint-integration)
-13. [Planned Features](#planned-features)
-14. [Environment Variables](#environment-variables)
-15. [Test Credentials](#test-credentials)
+8. [Styling Architecture](#styling-architecture)
+9. [Routing & Access Control](#routing--access-control)
+10. [Authentication](#authentication)
+11. [Theme System](#theme-system)
+12. [Deployment](#deployment)
+13. [SharePoint Integration](#sharepoint-integration)
+14. [Planned Features](#planned-features)
+15. [Environment Variables](#environment-variables)
+16. [Test Credentials](#test-credentials)
 
 ---
 
@@ -33,7 +34,7 @@ scoped to their own data.
 |---|---|---|
 | React | 18.3 | UI framework |
 | Vite | 5.4 | Build tool and dev server |
-| Tailwind CSS | v4 | Utility-first styling with dark mode |
+| Tailwind CSS | v4 | Utility-first styling |
 | React Router | v6 | Client-side routing |
 | Recharts | 2.12 | Bar charts and data visualization |
 | Lucide React | 0.383 | Icon library |
@@ -50,20 +51,35 @@ calibright-customer-portal/
 ├── package.json
 ├── vite.config.js
 ├── postcss.config.js
-├── vercel.json                     ← SPA rewrites + security headers
-├── .env.example                    ← environment variable template
-├── PROJECT.md                      ← this file
-├── AUTH_SETUP.md                   ← Entra ID app roles + MFA guide
-├── SHAREPOINT_SETUP.md             ← SharePoint connection guide
+├── vercel.json                       ← SPA rewrites + security headers
+├── .env.example                      ← environment variable template
+├── PROJECT.md                        ← this file
+├── AUTH_SETUP.md                     ← Entra ID app roles + MFA guide
+├── SHAREPOINT_SETUP.md               ← SharePoint connection guide
 │
 └── src/
     ├── App.jsx
-    ├── main.jsx                    ← ThemeProvider + AuthProvider entry
+    ├── main.jsx                      ← ThemeProvider + AuthProvider entry
+    │
+    ├── lib/
+    │   └── cn.js                     ← lightweight class composition utility
+    │
+    ├── styles/
+    │   ├── index.css                 ← Tailwind v4 + imports
+    │   ├── tokens.css                ← CSS custom property design tokens
+    │   └── components.css            ← reusable component patterns via @layer
     │
     ├── components/
+    │   │
+    │   ├── ui/                       ← reusable UI primitives
+    │   │   ├── Badge.jsx
+    │   │   ├── Button.jsx
+    │   │   ├── Card.jsx
+    │   │   └── primitives.jsx
+    │   │
     │   ├── auth/
-    │   │   ├── RequireAuth.jsx     ← route guard: auth + MFA
-    │   │   └── RequireRole.jsx     ← route guard: role check
+    │   │   ├── RequireAuth.jsx
+    │   │   └── RequireRole.jsx
     │   │
     │   ├── customers/
     │   │   ├── CustomerCard.jsx
@@ -113,10 +129,10 @@ calibright-customer-portal/
     │       └── VehicleFilters.jsx
     │
     ├── context/
-    │   ├── AuthContext.jsx          ← AuthProvider component
-    │   ├── AuthContextInstance.jsx  ← AuthContext object (separated for fast refresh)
-    │   ├── ThemeContext.jsx         ← ThemeProvider component
-    │   └── ThemeContextInstance.jsx ← ThemeContext object
+    │   ├── AuthContext.jsx           ← AuthProvider component
+    │   ├── AuthContextInstance.jsx   ← AuthContext object (fast refresh split)
+    │   ├── ThemeContext.jsx          ← ThemeProvider component
+    │   └── ThemeContextInstance.jsx  ← ThemeContext object
     │
     ├── data/
     │   ├── dashboardData.js
@@ -147,15 +163,12 @@ calibright-customer-portal/
     ├── routes/
     │   └── AppRoutes.jsx
     │
-    ├── services/
-    │   ├── graphClient.js          ← Microsoft Graph API authenticated fetch
-    │   ├── mockAuthService.js      ← temporary auth (replaces MSAL until Azure ready)
-    │   ├── msalConfig.js           ← MSAL config, APP_ROLES, MFA helpers
-    │   ├── sharepointService.js    ← SharePoint file operations
-    │   └── uploadService.js        ← upload pipeline + duplicate detection
-    │
-    └── styles/
-        └── index.css               ← Tailwind v4 + dark mode variant
+    └── services/
+        ├── graphClient.js
+        ├── mockAuthService.js
+        ├── msalConfig.js
+        ├── sharepointService.js
+        └── uploadService.js
 ```
 
 ---
@@ -165,318 +178,169 @@ calibright-customer-portal/
 ### Dashboard (`/`)
 Landing page for all authenticated users.
 
-**Sections:** WelcomeBanner, StatsGrid (4 cards), QuickActions, PendingDocuments,
-RecentDocuments table, ActivityFeed timeline.
+**Sections:** WelcomeBanner, StatsGrid (4 cards), QuickActions,
+PendingDocuments, RecentDocuments table, ActivityFeed timeline.
 
 ---
 
 ### Documents (`/documents`)
 Searchable, filterable table of all calibration records.
 
-**Features:**
-- Status tabs: All / Complete / Pending with live counts
-- Search: VIN, make, model, year, ADAS system, customer, technician, record ID
-- Sortable columns — click header to toggle asc/desc
-- Default sort: pending floats to top
-- Row hover reveals View and PDF download actions
-- Empty state when no results match
+**Features:** Status tabs (All / Complete / Pending) with live counts,
+search across VIN / make / model / year / ADAS system / customer /
+technician / record ID, sortable columns, default sort pending-first,
+row hover reveals View and PDF actions, empty state.
 
 ---
 
 ### Document Detail (`/documents/:id`)
-Full record detail for a single calibration.
-
-**Sections:** Hero card (record ID, vehicle, ADAS system, type, status), Vehicle
-Information, ADAS System, Customer (joined from mockCustomers), Calibration Details,
-Notes (conditional), Download CTA. Includes 404 state for unknown IDs.
+Full record detail for a single calibration. Hero card, Vehicle Info,
+ADAS System, Customer (joined from mockCustomers), Calibration Details,
+Notes (conditional), Download CTA. Includes 404 state.
 
 ---
 
 ### Vehicles (`/vehicles`)
-Vehicle directory scoped by role.
+Vehicle directory scoped by role. Admin sees all vehicles with customer
+filter. Customer sees only their own vehicles.
 
-**Admin:** all vehicles across all customers, filterable by customer and ADAS system.
-**Customer:** only vehicles belonging to their account.
-
-**Filters:** search by VIN / make / model / year / record ID, customer dropdown
-(admin only), ADAS system dropdown.
+**Filters:** VIN / make / model / year / record ID search, customer
+dropdown (admin only), ADAS system dropdown.
 
 ---
 
 ### Vehicle Detail (`/vehicles/:vin`)
-Full calibration history for a single vehicle.
-
-**Sections:** Hero card (year/make/model/VIN, record counts, ADAS systems serviced),
-chronological history list with status badges, type badges, technician, notes, View
-and PDF buttons per record. Includes 404 state.
+Full calibration history for a single vehicle. Hero card with record
+counts and all ADAS systems serviced, chronological history list with
+status badges, type badges, technician, notes, View and PDF buttons.
+Includes 404 state.
 
 ---
 
 ### Customers (`/customers`)
 Role-branching page.
 
-**Admin view:** searchable directory with grid/list toggle, filter by All /
-Collision Shop / Dealership with live counts. Card shows name, type, status,
-calibration counts, contact, DRP networks. Table is fully sortable.
+**Admin:** Searchable directory with grid/list toggle. Filter by All /
+Collision Shop / Dealership with live counts. Card and table views.
 
-**Customer view:** their own shop profile — hero section, four stat cards
-(total records, this month, complete, portal users), contact/location/DRP/
-account summary, pending record count badge.
+**Customer:** Their own shop profile — hero, four stat cards, contact /
+location / DRP / account summary sections, pending record count.
 
 ---
 
 ### Reports (`/reports`) — Admin only
-Profit analytics dashboard.
-
-**Features:**
-- Date range toggle: Last 30 Days / Last 90 Days / All Time
-- Amber notice banner (placeholder data until PDF pipeline live)
-- ProfitSummaryCards: total profit, avg margin, jobs analysed, best job
-- ProfitChart: Recharts grouped bar chart — revenue / cost / profit by month,
-  theme-aware colors via `useTheme()`
-- ProfitTable: sortable per-job breakdown, margin progress bar, totals footer
+Profit analytics. Date range toggle (30d / 90d / All Time).
+ProfitSummaryCards, ProfitChart (Recharts bar chart, theme-aware),
+ProfitTable (sortable, margin bars, totals footer).
+Amber notice banner while PDF extraction pipeline is pending.
 
 ---
 
 ### Uploads (`/uploads`) — Admin only
-Batch PDF upload interface.
+Batch PDF upload. Drag-and-drop zone, PDF validation (type / size / count),
+duplicate detection by record ID and VIN in filename,
+DuplicateWarningModal (overwrite or cancel), per-file progress queue,
+UploadSummary batch recap.
 
-**Features:**
-- Drag-and-drop zone with click-to-browse fallback
-- Validates: PDF type only, 25MB max per file, 10 file max per batch
-- Duplicate detection: filename scanned for record ID pattern
-  (`ADAS-YYYY-NNNNN`) and 17-char VIN
-- DuplicateWarningModal: shows which records would be overwritten,
-  Overwrite or Cancel options
-- Per-file progress: queued → checking → uploading → complete/overwritten/error
-- UploadSummary: batch recap with new/overwritten/failed counts
-- Upload Another Batch resets the page
-
-**PDF naming convention:**
-```
-ADAS-2024-03847_Honda_CRV_2023.pdf
-```
+**PDF naming convention:** `ADAS-2024-03847_Honda_CRV_2023.pdf`
 
 ---
 
 ### Settings (`/settings`)
-Tabbed settings page with sidebar navigation.
-
-**Tabs:**
-
-| Tab | Description |
-|---|---|
-| Appearance | Light / Dark / System theme selector with visual previews |
-| Profile | Display name, job title (editable); email, role (read-only) |
-| Notifications | Email toggles: new record, status change, monthly summary, user added |
-| Portal Users | User list with invite and remove. Admin sees all; customer sees their shop |
-| Security | Session info, MFA status, sign-out button |
+Tabbed settings — Appearance, Profile, Notifications, Portal Users, Security.
 
 ---
 
 ### Login (`/login`)
-Email/password form. Shows dev credential hints in development builds only
-(`import.meta.env.DEV`). Post-login redirects to the originally requested URL.
+Email/password form. Dev credential hints in DEV builds only.
+Post-login redirects to originally requested URL.
 
 ---
 
 ### Unauthorized (`/unauthorized`)
-403 page shown when a user's role doesn't match route requirements.
-Displays their signed-in email and offers Go Back / Sign Out options.
+403 page with Go Back and Sign Out options.
 
 ---
 
 ## Components
+
+### UI Primitives (`src/components/ui/`)
+
+| File | Exports | Description |
+|---|---|---|
+| `Badge.jsx` | `Badge` | Single source of truth for all status/type badges. Accepts `variant` prop mapping to token-driven CSS classes |
+| `Button.jsx` | `Button` | Reusable button with variant, size, icon, loading state |
+| `Card.jsx` | `Card`, `CardHeader`, `CardBody`, `CardFooter`, `SectionCard` | Card container family using `.card-*` CSS classes |
+| `primitives.jsx` | `PageHeader`, `EmptyState`, `Field`, `StatusCount`, `SortIcon`, `Toggle`, `ViewToggle` | Shared layout and UI atoms |
+
+### `cn` utility (`src/lib/cn.js`)
+Lightweight class composition helper. Joins truthy class strings.
+No external dependency.
+
+```js
+cn("base", condition && "conditional", "always") → "base conditional always"
+```
+
+---
 
 ### Layout
 
 | Component | Description |
 |---|---|
 | `DashboardShell` | Outer wrapper — sidebar, mobile sidebar, header, `<Outlet />`, footer |
-| `Sidebar` | Fixed desktop nav. Role-based filtering hides admin-only items from customers. Shows real user name/initials/role. Sign-out button |
-| `MobileSidebar` | Slide-in drawer. Body scroll lock, backdrop close, same role filtering as Sidebar |
-| `Header` | Sticky top bar — page title, search, notification badge, user dropdown with sign-out |
+| `Sidebar` | Fixed desktop nav. Role-based filtering. Real user name/initials/role. Sign-out button |
+| `MobileSidebar` | Slide-in drawer. Body scroll lock, backdrop close, same role filtering |
+| `Header` | Sticky top bar — page title, search, notification badge, user dropdown |
 
 ### Auth Guards
 
 | Component | Description |
 |---|---|
-| `RequireAuth` | Redirects unauthenticated users to `/login`. Shows spinner during MSAL init. Preserves intended destination in location state |
-| `RequireRole` | Redirects wrong-role users to `/unauthorized`. Used for `/reports` and `/uploads` |
-
-### Dashboard
-
-| Component | Description |
-|---|---|
-| `WelcomeBanner` | Time-aware greeting, date, completions this month pill |
-| `StatsGrid` | 4-up responsive grid of StatCards |
-| `StatCard` | Accepts color, icon, value, delta, trend. Supports blue/amber/slate/emerald/violet |
-| `QuickActions` | 2×2 grid of nav links with hover transitions |
-| `RecentDocuments` | Top 6 records sorted by upload date. Responsive — columns hide at md/lg |
-| `PendingDocuments` | Records with `status: "pending"`. Empty state, calibration type badge |
-| `ActivityFeed` | Timeline with icon dots. Types: upload, customer, vehicle |
-
-### Documents
-
-| Component | Description |
-|---|---|
-| `DocumentFilters` | Status tabs with counts + search input with clear button |
-| `DocumentsTable` | Sortable table, row hover actions, empty state, record count footer |
-
-### Reports
-
-| Component | Description |
-|---|---|
-| `ProfitSummaryCards` | Four stat cards with currency/percent formatting |
-| `ProfitChart` | Recharts grouped bar chart. Uses `useTheme()` for dark-aware inline colors |
-| `ProfitTable` | Sortable per-job table, margin progress bar, totals footer |
-
-### Uploads
-
-| Component | Description |
-|---|---|
-| `DropZone` | Drag-and-drop + click-to-browse. Validates type, size, count, deduplication |
-| `UploadQueue` | Per-file status list with progress bars |
-| `DuplicateWarningModal` | Overwrite confirmation modal with match type detail |
-| `UploadSummary` | Batch completion recap with failed file list |
-
-### Customers
-
-| Component | Description |
-|---|---|
-| `CustomerCard` | Grid card — name, type, status, calibration counts, contact, DRP |
-| `CustomerTable` | Sortable list view with same fields |
-| `CustomerProfile` | Self-view for customer users — stats, contact, location, DRP, account summary |
-| `CustomerViewToggle` | Grid/list switcher button group |
-
-### Vehicles
-
-| Component | Description |
-|---|---|
-| `VehicleCard` | Card with vehicle info, record counts, ADAS system tags, customer |
-| `VehicleFilters` | Search input + customer dropdown + ADAS system dropdown |
-
-### Settings
-
-| Component | Description |
-|---|---|
-| `AppearanceSettings` | Light/Dark/System theme cards with live preview thumbnails |
-| `NotificationSettings` | Email toggle list with save confirmation |
-| `ProfileSettings` | Editable name/title with read-only email/role |
-| `PortalUsersSettings` | User list, invite form, remove button. Role-scoped |
-| `SecuritySettings` | Session info panel, sessionStorage notice, sign-out |
+| `RequireAuth` | Redirects unauthenticated users to `/login`. Preserves destination |
+| `RequireRole` | Redirects wrong-role users to `/unauthorized` |
 
 ---
 
 ## Data Layer
 
-All data is mock. Each file is structured to be replaced by real API calls
-without changing component interfaces.
+All data is mock. Structured to be replaced by API calls without changing
+component interfaces.
 
 ### `dashboardData.js`
 **Exports:** `stats`, `navItems`, `quickActions`, `activityFeed`
 
----
-
 ### `mockCustomers.js`
 8 customers — 4 collision shops, 4 dealerships.
-
-**Key fields:** `id`, `name`, `type`, `franchiseBrand`, `drp[]`, `contact`,
-`address`, `totalCalibrations`, `calibrationsThisMonth`, `status`,
-`onboarded`, `lastActivity`, `portalUsers`
-
-**Exports:** `customers`, `activeCustomers`, `collisionShops`, `dealerships`,
-`getCustomerById(id)`
-
----
+**Exports:** `customers`, `activeCustomers`, `collisionShops`,
+`dealerships`, `getCustomerById(id)`
 
 ### `mockDocuments.js`
-12 ADAS calibration records. No expiry — records are permanent.
-
-**Key fields:** `id` (ADAS-YYYY-NNNNN), `vehicleId` (VH-NNNN), `year`, `make`,
-`model`, `vin`, `adasSystem`, `calibrationType` (Static/Dynamic), `customerId`,
-`customer`, `technician`, `calibrationDate`, `status`, `invoiceRef`,
-`uploadedAt`, `notes`
-
-**Exports:** `documents`, `adasSystems`, `recentDocuments`, `pendingDocuments`,
-`getDocumentById(id)`, `getDocumentsByCustomer(customerId)`,
-`getDocumentsByVehicle(vin)`
-
----
+12 ADAS calibration records. Permanent — no expiry.
+**Exports:** `documents`, `adasSystems`, `recentDocuments`,
+`pendingDocuments`, `getDocumentById(id)`,
+`getDocumentsByCustomer(customerId)`, `getDocumentsByVehicle(vin)`
 
 ### `mockVehicles.js`
-Derived at import time from `mockDocuments.js`. No duplication — always in sync.
-
-**Exports:** `vehicles`, `getVehicleByVin(vin)`, `getVehiclesByCustomer(customerId)`,
-`vehicleMakes`, `adasSystemOptions`
-
----
+Derived at import time from `mockDocuments.js`. Always in sync.
+**Exports:** `vehicles`, `getVehicleByVin(vin)`,
+`getVehiclesByCustomer(customerId)`, `vehicleMakes`, `adasSystemOptions`
 
 ### `mockReportData.js`
 20 profit records across Sep–Nov 2024.
-
-**Key fields:** `id`, `date`, `vehicle`, `adasSystem`, `customer`, `customerId`,
-`technician`, `listPrice`, `costPrice`
-
-**Derived (auto-calculated):** `profit` = listPrice − costPrice,
-`margin` = (profit / listPrice) × 100
-
-**Exports:** `profitRecords`, `profitRecordsWithCalcs`, `getSummaryStats(records)`,
-`getMonthlyTrend(records)`
+**Exports:** `profitRecords`, `profitRecordsWithCalcs`,
+`getSummaryStats(records)`, `getMonthlyTrend(records)`
 
 ---
 
 ## Services
 
-### `msalConfig.js`
-MSAL config for Microsoft Entra ID. All values from environment variables.
-Defines `APP_ROLES`, `loginRequest` (with MFA `amr` claims), `silentRequest`,
-and `isMfaVerified(account)` helper.
-
----
-
-### `mockAuthService.js`
-Temporary auth layer replacing MSAL while Azure account is being configured.
-Stores sessions in `sessionStorage` mirroring the MSAL account shape exactly.
-
-**Test accounts:** see [Test Credentials](#test-credentials) below.
-
-**To swap back to MSAL:**
-1. Revert `AuthContext.jsx` to the MSAL version
-2. Revert `Login.jsx` to the Microsoft sign-in button version
-3. Delete `mockAuthService.js`
-4. Re-add `VITE_AZURE_*` env vars
-
----
-
-### `graphClient.js`
-Authenticated fetch wrapper for Microsoft Graph API. Singleton MSAL instance,
-silent token refresh with redirect fallback. Returns JSON or Blob depending on
-`options.responseType`.
-
----
-
-### `sharepointService.js`
-All SharePoint document library operations.
-
-| Function | Description |
+| File | Description |
 |---|---|
-| `listCalibrationFiles()` | Lists all PDFs in the document library |
-| `getFileMetadata(itemId)` | Returns metadata for a single file |
-| `getDownloadUrl(itemId)` | Pre-authenticated temporary download URL |
-| `downloadFile(itemId)` | Downloads file as a Blob |
-| `triggerBrowserDownload(blob, fileName)` | Prompts browser save dialog |
-| `findFileByRecordId(recordId)` | Searches library for file matching record ID |
-
----
-
-### `uploadService.js`
-Mock upload pipeline with duplicate detection.
-
-| Function | Description |
-|---|---|
-| `checkForDuplicate(file)` | Scans filename for record ID and VIN patterns |
-| `simulateUpload(file, isOverwrite)` | Async mock with realistic delay, 10% error rate |
+| `msalConfig.js` | MSAL config, `APP_ROLES`, `loginRequest`, `silentRequest`, `isMfaVerified()` |
+| `mockAuthService.js` | Temporary auth replacing MSAL. Mirrors MSAL account shape exactly |
+| `graphClient.js` | Authenticated Graph API fetch wrapper. Silent token refresh |
+| `sharepointService.js` | SharePoint file operations — list, metadata, download, search by record ID |
+| `uploadService.js` | Upload pipeline — `checkForDuplicate(file)`, `simulateUpload(file, isOverwrite)` |
 
 ---
 
@@ -484,58 +348,97 @@ Mock upload pipeline with duplicate detection.
 
 ### Auth
 
-| File | Type | Exports |
-|---|---|---|
-| `AuthContextInstance.jsx` | Context object | `AuthContext` |
-| `AuthContext.jsx` | Provider component | `AuthProvider` |
-| `useAuth.js` | Hook | `useAuth()` |
+| File | Exports |
+|---|---|
+| `AuthContextInstance.jsx` | `AuthContext` (context object) |
+| `AuthContext.jsx` | `AuthProvider` (component) |
+| `useAuth.js` | `useAuth()` hook |
 
 **Context value:**
 ```js
 {
   account, role, mfaVerified,
   isAuthenticated,  // !!account && mfaVerified
-  isAdmin,          // role === APP_ROLES.ADMIN
-  isCustomer,       // role === APP_ROLES.CUSTOMER
+  isAdmin, isCustomer,
   initializing, error,
   login(email, password),
   logout(),
 }
 ```
 
----
-
 ### Theme
 
-| File | Type | Exports |
-|---|---|---|
-| `ThemeContextInstance.jsx` | Context object | `ThemeContext` |
-| `ThemeContext.jsx` | Provider component | `ThemeProvider`, `THEMES` |
-| `useTheme.js` | Hook | `useTheme()` |
+| File | Exports |
+|---|---|
+| `ThemeContextInstance.jsx` | `ThemeContext` (context object) |
+| `ThemeContext.jsx` | `ThemeProvider`, `THEMES` |
+| `useTheme.js` | `useTheme()` hook |
 
 **Context value:**
 ```js
-{
-  theme,      // "light" | "dark" | "system"
-  setTheme(mode),
-  isLight, isDark, isSystem,
-}
+{ theme, setTheme(mode), isLight, isDark, isSystem }
 ```
 
-Theme is persisted to `localStorage` under `calibright_theme`. Applied by
-toggling the `.dark` class on `<html>`. System preference changes are watched
-via `matchMedia` while system mode is active.
+### `useCustomerScope.js`
+Matches logged-in user email to a customer record.
+Returns `{ customer, customerId, isScoped }`.
+`isScoped = true` for customer users — data should be filtered.
 
 ---
 
-### `useCustomerScope.js`
-Matches the logged-in user's email to a customer record.
+## Styling Architecture
 
-```js
-const { customer, customerId, isScoped } = useCustomerScope();
-// isScoped = true for customer users — data should be filtered
-// isScoped = false for admins — show all data
+The app uses a three-layer styling system built on Tailwind CSS v4.
+
+### Layer 1 — Design Tokens (`tokens.css`)
+CSS custom properties (`--surface-card`, `--text-primary`, `--accent`,
+`--success-bg`, etc.) defined on `:root`. The `.dark` class on `<html>`
+overrides every token with dark-theme values. All colors, surfaces,
+borders, shadows, and status states are defined here.
+
+**Token categories:**
+- Surfaces: `--surface-page`, `--surface-card`, `--surface-subtle`, `--surface-inset`
+- Borders: `--border-base`, `--border-faint`, `--border-strong`, `--border-focus`
+- Text: `--text-primary`, `--text-secondary`, `--text-tertiary`, `--text-muted`
+- Accent: `--accent`, `--accent-hover`, `--accent-subtle`, `--accent-text`
+- Status: `--success-*`, `--warning-*`, `--danger-*`, `--info-*`, `--violet-*`
+- Sidebar: `--sidebar-bg`, `--sidebar-border`, `--sidebar-text`, etc.
+- Shadows: `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-overlay`
+- Radius: `--radius-sm` through `--radius-2xl`
+- Charts: `--chart-grid`, `--chart-tick`, `--chart-cursor`
+
+### Layer 2 — Semantic Utilities (`components.css` @utility)
+Tailwind `@utility` declarations create single-purpose classes that
+reference token variables. Replaces paired `dark:` variants with
+a single semantic class.
+
+```css
+/* Instead of: bg-white dark:bg-slate-900 */
+.bg-card { background-color: var(--surface-card); }
+
+/* Instead of: text-slate-800 dark:text-slate-100 */
+.text-primary { color: var(--text-primary); }
 ```
+
+### Layer 3 — Component Patterns (`components.css` @layer components)
+Higher-level reusable patterns: `.card`, `.card-header`, `.card-body`,
+`.card-footer`, `.badge`, `.badge-success`, `.btn`, `.btn-primary`,
+`.table`, `.table th`, `.input-base`, `.nav-item`, `.nav-item-active`,
+`.toggle-track`, `.progress-track`, `.timeline-dot`, `.empty-state`,
+`.page-header`, `.page-title`, `.label-overline`.
+
+### Benefits of this architecture
+- **Zero `dark:` duplication** — theme switching is a single CSS variable swap
+- **No scattered hardcoded colors** — all values in `tokens.css`
+- **Consistent status states** — badge variants map to semantic token groups
+- **Chart theming** — `ProfitChart` reads CSS vars via `getComputedStyle`
+- **Scalable** — adding a new theme means adding one CSS block in `tokens.css`
+
+### Important: CSS import order in `main.jsx`
+```js
+import "./styles/index.css";  // correct — styles/ folder
+```
+The root `src/index.css` is the old file and should be deleted.
 
 ---
 
@@ -545,125 +448,105 @@ const { customer, customerId, isScoped } = useCustomerScope();
 |---|---|---|---|
 | `/login` | `Login` | Public | — |
 | `/unauthorized` | `Unauthorized` | Public | — |
-| `/` | `Dashboard` | ✅ Required | Any |
-| `/documents` | `Documents` | ✅ Required | Any |
-| `/documents/:id` | `DocumentDetail` | ✅ Required | Any |
-| `/vehicles` | `Vehicles` | ✅ Required | Any |
-| `/vehicles/:vin` | `VehicleDetail` | ✅ Required | Any |
-| `/customers` | `Customers` | ✅ Required | Any |
-| `/settings` | `Settings` | ✅ Required | Any |
-| `/reports` | `Reports` | ✅ Required | Admin only |
-| `/uploads` | `Uploads` | ✅ Required | Admin only |
+| `/` | `Dashboard` | ✅ | Any |
+| `/documents` | `Documents` | ✅ | Any |
+| `/documents/:id` | `DocumentDetail` | ✅ | Any |
+| `/vehicles` | `Vehicles` | ✅ | Any |
+| `/vehicles/:vin` | `VehicleDetail` | ✅ | Any |
+| `/customers` | `Customers` | ✅ | Any |
+| `/settings` | `Settings` | ✅ | Any |
+| `/reports` | `Reports` | ✅ | Admin only |
+| `/uploads` | `Uploads` | ✅ | Admin only |
 
 **Guard hierarchy:**
 ```
-<RequireAuth>           ← checks isAuthenticated (account + MFA)
+<RequireAuth>
   <DashboardShell>
-    <Route ... />       ← available to all auth'd users
-    <RequireRole>       ← additionally checks role
-      <Route ... />     ← admin-only
+    <Route />           ← all authenticated users
+    <RequireRole>
+      <Route />         ← admin only
     </RequireRole>
   </DashboardShell>
 </RequireAuth>
 ```
 
-**Sidebar** and **MobileSidebar** also filter nav items by role — customers
+Sidebar and MobileSidebar also filter nav items by role — customers
 never see Reports or Uploads in the navigation.
 
 ---
 
 ## Authentication
 
-Currently running on **mock auth** (`mockAuthService.js`) while the company's
-Microsoft 365 / Azure account is being configured.
+Currently running on **mock auth** (`mockAuthService.js`) while the
+company's Microsoft 365 / Azure account is being configured.
 
-The mock layer mirrors the real MSAL account shape exactly so the swap back
-requires minimal changes.
+### To swap back to MSAL (when Azure is ready)
+1. Revert `AuthContext.jsx` to the MSAL version
+2. Revert `Login.jsx` to the Microsoft sign-in button version
+3. Delete `mockAuthService.js`
+4. Add `VITE_AZURE_*` env vars
 
-### Real auth flow (when Azure is ready)
+See `AUTH_SETUP.md` for full Entra ID configuration.
+
+### Auth flow (when live)
 ```
-User visits portal
-      ↓
-Redirected to Microsoft login (Entra ID)
-      ↓
-MFA challenge (enforced by Conditional Access / Security Defaults)
-      ↓
-Token issued with role claim (Calibright.Admin or Calibright.Customer)
-      ↓
-AuthContext reads amr claim (MFA verified) and roles claim
-      ↓
-isAuthenticated = true only when both account + MFA present
+Visit portal → Microsoft login (Entra) → MFA challenge
+→ Token with role claim → AuthContext reads amr + roles
+→ isAuthenticated = true only when account + MFA both present
 ```
-
-See `AUTH_SETUP.md` for full Entra ID configuration steps.
 
 ---
 
 ## Theme System
 
-Dark mode is implemented using Tailwind CSS v4's class strategy.
-
-- **Toggle:** `.dark` class on `<html>` element
+- **Toggle:** `.dark` class on `<html>`
 - **Variant:** `@variant dark (&:where(.dark, .dark *))` in `index.css`
 - **Storage:** `localStorage` key `calibright_theme`
 - **Default:** Light
 - **Options:** Light / Dark / System (follows OS `prefers-color-scheme`)
-- **Transition:** 200ms ease on background and text color changes
-- **Charts:** `ProfitChart` uses `useTheme()` to swap Recharts inline colors
-
-All components use `dark:` prefixed Tailwind classes. No CSS-in-JS or
-additional libraries required.
+- **Transitions:** 200ms ease on background, color, and border-color
+- **Charts:** `ProfitChart` reads `--chart-*` vars via `getComputedStyle()`
+- **Scalability:** New themes = one new CSS block in `tokens.css`
 
 ---
 
 ## Deployment
 
-Hosted on **Vercel**. The `vercel.json` at the project root handles:
+Hosted on **Vercel**. `vercel.json` handles:
 
-**SPA routing** — rewrites all paths to `index.html` so React Router works
-on direct URL access and page refresh.
+**SPA routing** — rewrites all paths to `index.html`.
 
-**Security headers** applied to all responses:
+**Security headers:**
 
-| Header | Value |
+| Header | Purpose |
 |---|---|
-| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` |
-| `X-Frame-Options` | `DENY` |
-| `X-Content-Type-Options` | `nosniff` |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` |
-| `Permissions-Policy` | camera, mic, geolocation, payment all disabled |
-| `Content-Security-Policy` | Restricts to self + Microsoft auth/graph/SharePoint domains |
-| `X-XSS-Protection` | `1; mode=block` |
+| `Strict-Transport-Security` | Forces HTTPS for 2 years |
+| `X-Frame-Options: DENY` | Prevents clickjacking |
+| `X-Content-Type-Options: nosniff` | Prevents MIME sniffing |
+| `Referrer-Policy` | Limits referrer info |
+| `Permissions-Policy` | Disables camera, mic, geolocation, payment |
+| `Content-Security-Policy` | Restricts to self + Microsoft domains |
+| `X-XSS-Protection` | Legacy XSS filter |
 
 ---
 
 ## SharePoint Integration
 
-See **`SHAREPOINT_SETUP.md`** for the full step-by-step guide.
+See `SHAREPOINT_SETUP.md` for full guide.
 
 ### Architecture
 ```
-Customer browser
-      ↓
-Vercel (React portal)
-      ↓
-Microsoft Graph API  ←── MSAL handles auth
-      ↓
-SharePoint Online Document Library (PDF storage)
-      ↓ (future)
-Azure Document Intelligence (PDF profit extraction)
+Customer browser → Vercel (React) → Microsoft Graph API → SharePoint (PDFs)
+                                                         ↓ (future)
+                                              Azure Document Intelligence
 ```
 
 ### Currently wired
-- MSAL auth config (`msalConfig.js`)
-- Graph API client (`graphClient.js`)
-- SharePoint file service (`sharepointService.js`)
-- Auth context and hook
+- MSAL auth config, Graph API client, SharePoint file service, auth context
 
 ### Still needs connecting
-- `<AuthProvider>` swap from mock to MSAL when Azure is ready
-- Download PDF buttons in `DocumentDetail` and `VehicleDetail` connected to
-  `sharepointService.findFileByRecordId()`
+- Swap mock auth for MSAL when Azure is ready
+- Wire Download PDF buttons to `sharepointService.findFileByRecordId()`
 - Azure Document Intelligence pipeline for profit extraction
 
 ---
@@ -671,29 +554,15 @@ Azure Document Intelligence (PDF profit extraction)
 ## Planned Features
 
 ### PDF Profit Extraction
-Once PDFs are in SharePoint, Azure Document Intelligence will extract list
-price and cost price from each document, replacing mock report data.
-
-```
-PDF uploaded to SharePoint
-      ↓
-Azure Document Intelligence (trained on invoice template)
-extracts: list price, cost price, job ID, VIN
-      ↓
-Values stored against calibration record
-      ↓
-Reports page shows real profit analytics
-```
+Azure Document Intelligence trained on invoice template extracts list
+price and cost price, replacing mock report data with real analytics.
 
 ### Microsoft Auth Swap
-When the company's M365 account is ready — follow `AUTH_SETUP.md` and swap
-3 files to enable full MSAL login with MFA and Entra App Roles.
+Follow `AUTH_SETUP.md` — swap 3 files when company M365 account is ready.
 
 ---
 
 ## Environment Variables
-
-Copy `.env.example` to `.env` and fill in values.
 
 ```bash
 cp .env.example .env
@@ -701,27 +570,26 @@ cp .env.example .env
 
 | Variable | Description |
 |---|---|
-| `VITE_AZURE_CLIENT_ID` | App registration client ID (Entra) |
-| `VITE_AZURE_TENANT_ID` | Directory tenant ID (Entra) |
-| `VITE_REDIRECT_URI` | OAuth redirect URI — must match Entra registration |
+| `VITE_AZURE_CLIENT_ID` | Entra app registration client ID |
+| `VITE_AZURE_TENANT_ID` | Entra directory tenant ID |
+| `VITE_REDIRECT_URI` | OAuth redirect URI |
 | `VITE_SHAREPOINT_SITE_ID` | SharePoint site ID from Graph API |
-| `VITE_SHAREPOINT_DRIVE_ID` | Document library drive ID from Graph API |
+| `VITE_SHAREPOINT_DRIVE_ID` | Document library drive ID |
 
-Add the same variables to **Vercel → Settings → Environment Variables** for
-production.
+Add same variables to Vercel → Settings → Environment Variables.
 
 ---
 
 ## Test Credentials
 
-Used with the current mock auth system. Remove or restrict before production.
+Used with mock auth. Remove before production.
 
 | Email | Password | Role | Customer |
 |---|---|---|---|
 | `admin@calibright.com` | `admin1234` | Admin | All customers |
-| `b.kowalski@prestigecollision.com` | `customer1234` | Customer | Prestige Collision Center |
+| `b.kowalski@prestigecollision.com` | `customer1234` | Customer | Prestige Collision |
 | `a.ruiz@metroford.com` | `customer1234` | Customer | Metro Ford |
 | `k.park@sunrisetoyota.com` | `customer1234` | Customer | Sunrise Toyota |
 
-Dev credential hints are shown on the Login page in development builds only
-and are hidden automatically in production via `import.meta.env.DEV`.
+Dev credential hints shown on Login page in DEV builds only —
+hidden automatically in production via `import.meta.env.DEV`.
