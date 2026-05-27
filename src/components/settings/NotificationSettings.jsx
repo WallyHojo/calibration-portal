@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Bell, Save } from "lucide-react";
-import { Toggle } from "../ui/primitives";
+import { Toggle } from "../ui/Primitives";
 import Button from "../ui/Button";
 
 const NOTIFICATION_OPTIONS = [

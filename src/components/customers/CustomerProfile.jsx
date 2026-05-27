@@ -4,7 +4,7 @@ import {
 } from "lucide-react";
 import { getDocumentsByCustomer } from "../../data/mockDocuments";
 import { SectionCard }            from "../ui/Card";
-import { Field }                  from "../ui/primitives";
+import { Field }                  from "../ui/Primitives";
 
 function formatDate(iso) {
   return new Intl.DateTimeFormat("en-US", {

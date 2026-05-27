@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SortIcon } from "../ui/primitives";
+import { SortIcon } from "../ui/Primitives";
 
 function formatCurrency(val) {
   return new Intl.NumberFormat("en-US", {
