@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Badge from "../ui/Badge";
-import { SortIcon } from "../ui/primitives";
+import { SortIcon } from "../ui/Primitives";
 
 function formatDate(iso) {
   return new Intl.DateTimeFormat("en-US", {

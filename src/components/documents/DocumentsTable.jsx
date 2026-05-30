@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ExternalLink, Download } from "lucide-react";
 import Badge from "../ui/Badge";
-import { SortIcon } from "../ui/primitives";
+import { SortIcon } from "../ui/Primitives";
 
 const STATUS_ORDER = { pending: 0, complete: 1 };
 

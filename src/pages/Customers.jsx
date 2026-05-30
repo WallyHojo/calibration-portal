@@ -6,7 +6,7 @@ import { customers }         from "../data/mockCustomers";
 import CustomerCard          from "../components/customers/CustomerCard";
 import CustomerTable         from "../components/customers/CustomerTable";
 import CustomerProfile       from "../components/customers/CustomerProfile";
-import { ViewToggle }        from "../components/ui/primitives";
+import { ViewToggle }        from "../components/ui/Primitives";
 import { cn }                from "../lib/cn";
 
 const TYPE_TABS = [

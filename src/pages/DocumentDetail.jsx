@@ -6,7 +6,7 @@ import {
 import { getDocumentById }  from "../data/mockDocuments";
 import { getCustomerById }  from "../data/mockCustomers";
 import { SectionCard }      from "../components/ui/Card";
-import { Field, EmptyState } from "../components/ui/primitives";
+import { Field, EmptyState } from "../components/ui/Primitives";
 import Badge   from "../components/ui/Badge";
 import Button  from "../components/ui/Button";
 

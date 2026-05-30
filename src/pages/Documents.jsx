@@ -3,7 +3,7 @@ import { FileText } from "lucide-react";
 import DocumentFilters from "../components/documents/DocumentFilters";
 import DocumentsTable  from "../components/documents/DocumentsTable";
 import DocumentCard    from "../components/documents/DocumentCard";
-import { ViewToggle }  from "../components/ui/primitives";
+import { ViewToggle }  from "../components/ui/Primitives";
 import { documents }   from "../data/mockDocuments";
 import { useAuth }          from "../hooks/useAuth";
 import { useCustomerScope } from "../hooks/useCustomerScope";
