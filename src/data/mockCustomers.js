@@ -1,7 +1,6 @@
 // ─── Mock Customers ───────────────────────────────────────────────────────────
 // Customer records for the ADAS calibration portal.
-// Customers are collision repair shops and dealerships who access
-// their vehicles' calibration documents remotely.
+// All customers are collision repair shops.
 
 export const customers = [
   {
@@ -30,13 +29,12 @@ export const customers = [
   },
   {
     id: "CUST-002",
-    name: "Metro Ford",
-    type: "dealership",
-    franchiseBrand: "Ford",
+    name: "Metro Collision & Auto",
+    type: "collision",
     contact: {
       name: "Angela Ruiz",
-      title: "Service Director",
-      email: "a.ruiz@metroford.com",
+      title: "Shop Manager",
+      email: "a.ruiz@metrocollision.com",
       phone: "+1 (216) 555-0347",
     },
     address: {
@@ -45,7 +43,7 @@ export const customers = [
       state: "OH",
       zip: "44129",
     },
-    drp: [],
+    drp: ["Progressive", "GEICO"],
     totalCalibrations: 487,
     calibrationsThisMonth: 22,
     status: "active",
@@ -55,13 +53,12 @@ export const customers = [
   },
   {
     id: "CUST-003",
-    name: "Sunrise Toyota",
-    type: "dealership",
-    franchiseBrand: "Toyota",
+    name: "Sunrise Auto Body",
+    type: "collision",
     contact: {
       name: "Kevin Park",
-      title: "Fixed Operations Manager",
-      email: "k.park@sunrisetoyota.com",
+      title: "Operations Manager",
+      email: "k.park@sunriseautobody.com",
       phone: "+1 (312) 555-0914",
     },
     address: {
@@ -70,7 +67,7 @@ export const customers = [
       state: "IL",
       zip: "60714",
     },
-    drp: [],
+    drp: ["State Farm", "Farmers"],
     totalCalibrations: 634,
     calibrationsThisMonth: 31,
     status: "active",
@@ -104,13 +101,12 @@ export const customers = [
   },
   {
     id: "CUST-005",
-    name: "AutoNation Honda Westside",
-    type: "dealership",
-    franchiseBrand: "Honda",
+    name: "Westside Collision Center",
+    type: "collision",
     contact: {
       name: "Derek Osman",
-      title: "Service Manager",
-      email: "d.osman@autonation.com",
+      title: "Shop Foreman",
+      email: "d.osman@westsidecollision.com",
       phone: "+1 (503) 555-0261",
     },
     address: {
@@ -119,7 +115,7 @@ export const customers = [
       state: "OR",
       zip: "97201",
     },
-    drp: [],
+    drp: ["USAA", "Allstate"],
     totalCalibrations: 409,
     calibrationsThisMonth: 19,
     status: "active",
@@ -153,13 +149,12 @@ export const customers = [
   },
   {
     id: "CUST-007",
-    name: "Capital Subaru",
-    type: "dealership",
-    franchiseBrand: "Subaru",
+    name: "Capital Auto Body",
+    type: "collision",
     contact: {
       name: "Paul Ferreira",
-      title: "Service Advisor Lead",
-      email: "p.ferreira@capitalsubaru.com",
+      title: "Shop Manager",
+      email: "p.ferreira@capitalautobody.com",
       phone: "+1 (512) 555-0440",
     },
     address: {
@@ -168,7 +163,7 @@ export const customers = [
       state: "TX",
       zip: "78752",
     },
-    drp: [],
+    drp: ["State Farm", "Progressive"],
     totalCalibrations: 318,
     calibrationsThisMonth: 16,
     status: "active",
@@ -208,5 +203,3 @@ export function getCustomerById(id) {
 }
 
 export const activeCustomers = customers.filter((c) => c.status === "active");
-export const collisionShops  = customers.filter((c) => c.type === "collision");
-export const dealerships     = customers.filter((c) => c.type === "dealership");

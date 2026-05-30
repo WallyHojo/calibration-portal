@@ -22,7 +22,6 @@ const variantMap = {
   static:      "badge-neutral",
   dynamic:     "badge-violet",
   collision:   "badge-info",
-  dealership:  "badge-violet",
 };
 
 export default function Badge({ variant = "neutral", icon: Icon, children, className }) {

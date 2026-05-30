@@ -83,7 +83,7 @@ export default function Vehicles() {
 
   return (
     <div className="space-y-5 max-w-screen-2xl mx-auto">
-      <div className="page-header">
+      <div className="flex flex-col md:flex-row page-header">
         <div>
           <h2 className="page-title">Vehicles</h2>
           <p className="page-description">

@@ -69,7 +69,7 @@ export const activityFeed = [
     message: "Calibration record ADAS-2024-03846 uploaded",
     user: "D. Salinas",
     timestamp: "2024-11-15T11:18:00Z",
-    detail: "2022 Ford F-150 — Front Radar (ACC) — Metro Ford",
+    detail: "2022 Ford F-150 — Front Radar (ACC) — Metro Collision & Auto",
   },
   {
     id: 3,
@@ -77,7 +77,7 @@ export const activityFeed = [
     message: "Calibration record ADAS-2024-03845 uploaded",
     user: "M. Thornton",
     timestamp: "2024-11-14T16:47:00Z",
-    detail: "2024 Toyota Camry — 360° Surround View — Sunrise Toyota",
+    detail: "2024 Toyota Camry — 360° Surround View — Sunrise Auto Body",
   },
   {
     id: 4,

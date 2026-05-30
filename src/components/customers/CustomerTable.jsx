@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Badge from "../ui/Badge";
-import { SortIcon } from "../ui/Primitives";
+import { SortIcon } from "../ui/primitives";
 
 function formatDate(iso) {
   return new Intl.DateTimeFormat("en-US", {
@@ -76,7 +76,7 @@ export default function CustomerTable({ customers }) {
                   <p className="font-semibold text-secondary">{c.name}</p>
                   {c.franchiseBrand && <p className="text-xs text-muted mt-0.5">{c.franchiseBrand} Franchise</p>}
                 </td>
-                <td><Badge variant={c.type}>{c.type === "collision" ? "Collision Shop" : "Dealership"}</Badge></td>
+                <td><Badge variant={c.type}>"Collision Shop"</Badge></td>
                 <td className="text-xs text-tertiary whitespace-nowrap">{c.address.city}, {c.address.state} {c.address.zip}</td>
                 <td>
                   <p className="text-xs font-medium text-secondary">{c.contact.name}</p>

@@ -2,7 +2,7 @@ import { Search, X } from "lucide-react";
 import { cn } from "../../lib/cn";
 
 const STATUS_TABS = [
-  { key: "all",      label: "All Records" },
+  { key: "all",      label: "All" },
   { key: "complete", label: "Complete"    },
   { key: "pending",  label: "Pending"     },
 ];
@@ -24,8 +24,8 @@ export default function DocumentFilters({
               key={tab.key}
               onClick={() => onStatusChange(tab.key)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
-                active ? "bg-accent text-white shadow-sm" : "text-muted hover:text-secondary hover:bg-hover"
+                "flex justify-center items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all flex-1",
+                active ? "bg-accent text-white shadow-sm" : "text-muted not-[]:hover:text-secondary hover:bg-hover"
               )}
             >
               {tab.label}

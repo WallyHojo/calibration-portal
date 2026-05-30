@@ -10,13 +10,12 @@ export default function CustomerCard({ customer }) {
             <Building2 className="w-5 h-5 text-muted" />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
-            <Badge variant={customer.type}>{customer.type === "collision" ? "Collision Shop" : "Dealership"}</Badge>
+            <Badge variant="collision">Collision Shop</Badge>
             <Badge variant={customer.status}>{customer.status === "active" ? "Active" : "Inactive"}</Badge>
           </div>
         </div>
         <div>
           <h3 className="text-sm font-semibold text-primary">{customer.name}</h3>
-          {customer.franchiseBrand && <p className="text-xs text-muted mt-0.5">{customer.franchiseBrand} Franchise</p>}
           {customer.drp?.length > 0 && <p className="text-xs text-muted mt-0.5">DRP: {customer.drp.join(", ")}</p>}
         </div>
       </div>

@@ -6,7 +6,7 @@ import {
 import { getDocumentById }  from "../data/mockDocuments";
 import { getCustomerById }  from "../data/mockCustomers";
 import { SectionCard }      from "../components/ui/Card";
-import { Field, EmptyState } from "../components/ui/Primitives";
+import { Field, EmptyState } from "../components/ui/primitives";
 import Badge   from "../components/ui/Badge";
 import Button  from "../components/ui/Button";
 
@@ -75,7 +75,7 @@ export default function DocumentDetail() {
             </h2>
             <p className="text-sm text-muted mt-1">{doc.adasSystem}</p>
           </div>
-          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
             <Badge variant={doc.calibrationType === "Dynamic" ? "dynamic" : "static"}>
               {doc.calibrationType}
             </Badge>
@@ -126,7 +126,7 @@ export default function DocumentDetail() {
 
         <SectionCard title="Customer" icon={Building2}>
           <div className="grid grid-cols-1 gap-y-4">
-            <Field label="Shop / Dealership" value={doc.customer} />
+            <Field label="Collision Shop" value={doc.customer} />
             {customer && (
               <>
                 <Field label="Contact"  value={customer.contact.name} />

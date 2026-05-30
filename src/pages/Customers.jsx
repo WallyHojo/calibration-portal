@@ -6,13 +6,12 @@ import { customers }         from "../data/mockCustomers";
 import CustomerCard          from "../components/customers/CustomerCard";
 import CustomerTable         from "../components/customers/CustomerTable";
 import CustomerProfile       from "../components/customers/CustomerProfile";
-import { ViewToggle }        from "../components/ui/Primitives";
+import { ViewToggle }        from "../components/ui/primitives";
 import { cn }                from "../lib/cn";
 
 const TYPE_TABS = [
-  { key: "all",        label: "All"            },
-  { key: "collision",  label: "Collision Shops" },
-  { key: "dealership", label: "Dealerships"     },
+  { key: "all",       label: "All"            },
+  { key: "collision", label: "Collision Shops" },
 ];
 
 function AdminDirectory() {
@@ -21,9 +20,8 @@ function AdminDirectory() {
   const [typeFilter, setTypeFilter] = useState("all");
 
   const counts = useMemo(() => ({
-    all:        customers.length,
-    collision:  customers.filter((c) => c.type === "collision").length,
-    dealership: customers.filter((c) => c.type === "dealership").length,
+    all:       customers.length,
+    collision: customers.filter((c) => c.type === "collision").length,
   }), []);
 
   const filtered = useMemo(() => customers.filter((c) => {
@@ -36,7 +34,6 @@ function AdminDirectory() {
       c.address.state.toLowerCase().includes(q)                 ||
       c.contact.name.toLowerCase().includes(q)                  ||
       c.contact.email.toLowerCase().includes(q)                 ||
-      (c.franchiseBrand ?? "").toLowerCase().includes(q)        ||
       (c.drp ?? []).some((d) => d.toLowerCase().includes(q))
     );
   }), [search, typeFilter]);
@@ -48,7 +45,7 @@ function AdminDirectory() {
       <div className="page-header">
         <div>
           <h2 className="page-title">Customers</h2>
-          <p className="page-description">All body shops and dealerships with access to the portal.</p>
+          <p className="page-description">All collision repair shops with access to the portal.</p>
         </div>
         <div className="card flex items-center gap-2 px-3 py-1.5">
           <Users className="w-4 h-4 text-muted" />

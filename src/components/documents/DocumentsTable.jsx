@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ExternalLink, Download } from "lucide-react";
 import Badge from "../ui/Badge";
-import { SortIcon } from "../ui/Primitives";
+import { SortIcon } from "../ui/primitives";
 
 const STATUS_ORDER = { pending: 0, complete: 1 };
 
@@ -81,7 +81,7 @@ export default function DocumentsTable({ records }) {
           </thead>
           <tbody>
             {sorted.map((doc) => (
-              <tr key={doc.id} className="group">
+              <tr key={doc.id} className="">
                 <td className="font-mono text-xs text-muted whitespace-nowrap">{doc.id}</td>
                 <td className="whitespace-nowrap">
                   <p className="font-medium text-secondary">{doc.year} {doc.make} {doc.model}</p>
@@ -99,7 +99,7 @@ export default function DocumentsTable({ records }) {
                   <Badge variant={doc.status}>{doc.status === "complete" ? "Complete" : "Pending"}</Badge>
                 </td>
                 <td className="whitespace-nowrap">
-                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-2">
                     <Link
                       to={`/documents/${doc.id}`}
                       className="flex items-center gap-1 text-xs font-medium text-accent px-2.5 py-1.5 rounded-lg hover:bg-accent-subtle transition-colors"

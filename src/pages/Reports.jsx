@@ -30,7 +30,7 @@ export default function Reports() {
   return (
     <div className="space-y-6 max-w-screen-2xl mx-auto">
       {/* Header */}
-      <div className="page-header">
+      <div className="flex flex-col md:flex-row page-header">
         <div>
           <h2 className="page-title">Reports</h2>
           <p className="page-description">Profit analytics across all calibration jobs.</p>

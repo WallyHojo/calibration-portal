@@ -4,7 +4,7 @@ import {
 } from "lucide-react";
 import { getDocumentsByCustomer } from "../../data/mockDocuments";
 import { SectionCard }            from "../ui/Card";
-import { Field }                  from "../ui/Primitives";
+import { Field }                  from "../ui/primitives";
 
 function formatDate(iso) {
   return new Intl.DateTimeFormat("en-US", {
@@ -63,16 +63,13 @@ export default function CustomerProfile({ customer }) {
               <span
                 className="badge"
                 style={{
-                  backgroundColor: customer.type === "dealership" ? "var(--violet-bg)" : "var(--info-bg)",
-                  color:           customer.type === "dealership" ? "var(--violet-text)" : "var(--info-text)",
-                  borderColor:     customer.type === "dealership" ? "var(--violet-border)" : "var(--info-border)",
+                  backgroundColor: "var(--info-bg)",
+                  color:           "var(--info-text)",
+                  borderColor:     "var(--info-border)",
                 }}
               >
-                {customer.type === "dealership" ? "Dealership" : "Collision Shop"}
+                Collision Shop
               </span>
-              {customer.franchiseBrand && (
-                <span className="text-xs text-muted">{customer.franchiseBrand} Franchise</span>
-              )}
               <span className="badge badge-success">Active</span>
             </div>
           </div>

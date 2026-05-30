@@ -126,7 +126,7 @@ export default function Uploads() {
         >
           ADAS-2024-03847_Honda_CRV_2023.pdf
         </div>
-        <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-muted">
+        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted">
           <div><span className="font-semibold text-tertiary">Record ID</span> — ADAS-YYYY-NNNNN</div>
           <div><span className="font-semibold text-tertiary">VIN</span> — 17-char alphanumeric</div>
         </div>
